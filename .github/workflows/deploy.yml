@@ -45,7 +45,16 @@ jobs:
       # NPM Vulnerability Audit
       # -----------------------------------------
       - name: NPM Security Audit
-        run: npm audit --audit-level=high || true
+        run: npm audit --json > npm-audit.json || true
+
+      # -----------------------------------------
+      # Upload NPM Audit Report
+      # -----------------------------------------
+      - name: Upload NPM Audit Report
+        uses: actions/upload-artifact@v4
+        with:
+          name: npm-audit-report
+          path: npm-audit.json
 
       # -----------------------------------------
       # Secret Scanning (API keys/passwords)
