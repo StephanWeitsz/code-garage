@@ -6,15 +6,124 @@ on:
       - master
 
 jobs:
-  deploy:
+  # =========================================================
+  # STAGE 1 - BASIC SECURITY CHECKS
+  # =========================================================
+  # Recommended to keep enabled
+  # =========================================================
+
+  security-stage-1:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Debug
-        run: |
-          echo "HOST EXISTS"
-          echo "${{ secrets.SERVER_HOST }}" | wc -c
+      - name: Checkout Repository
+        uses: actions/checkout@v4
 
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 8.2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install Composer Dependencies
+        run: composer install --no-interaction --prefer-dist
+
+      - name: Install NPM Dependencies
+        run: npm install
+
+      # -----------------------------------------
+      # Composer Vulnerability Audit
+      # -----------------------------------------
+      - name: Composer Security Audit
+        run: composer audit || true
+
+      # -----------------------------------------
+      # NPM Vulnerability Audit
+      # -----------------------------------------
+      - name: NPM Security Audit
+        run: npm audit --audit-level=high || true
+
+      # -----------------------------------------
+      # Secret Scanning (API keys/passwords)
+      # -----------------------------------------
+      - name: Run Gitleaks
+        uses: gitleaks/gitleaks-action@v2
+        continue-on-error: true
+
+
+  # =========================================================
+  # STAGE 2 - STATIC ANALYSIS / SAST
+  # =========================================================
+  # COMMENT OUT UNTIL READY
+  # =========================================================
+
+  # security-stage-2:
+  #   runs-on: ubuntu-latest
+  #
+  #   steps:
+  #     - name: Checkout Repository
+  #       uses: actions/checkout@v4
+  #
+  #     - name: Setup PHP
+  #       uses: shivammathur/setup-php@v2
+  #       with:
+  #         php-version: 8.2
+  #
+  #     - name: Install Composer Dependencies
+  #       run: composer install --no-interaction --prefer-dist
+  #
+  #     # -----------------------------------------
+  #     # PHPStan Static Analysis
+  #     # -----------------------------------------
+  #     - name: Run PHPStan
+  #       run: vendor/bin/phpstan analyse || true
+  #
+  #     # -----------------------------------------
+  #     # Laravel Enlightn Security Scanner
+  #     # -----------------------------------------
+  #     - name: Run Enlightn
+  #       run: php artisan enlightn --ci || true
+
+
+  # =========================================================
+  # STAGE 3 - DAST / LIGHTWEIGHT PENTESTING
+  # =========================================================
+  # COMMENT OUT UNTIL READY
+  # =========================================================
+
+  # security-stage-3:
+  #   runs-on: ubuntu-latest
+  #
+  #   steps:
+  #
+  #     # -----------------------------------------
+  #     # OWASP ZAP Baseline Scan
+  #     # -----------------------------------------
+  #     - name: OWASP ZAP Baseline Scan
+  #       uses: zaproxy/action-baseline@v0.12.0
+  #       with:
+  #         target: 'https://code-garage.co.za'
+  #
+  #       continue-on-error: true
+
+
+  # =========================================================
+  # DEPLOYMENT
+  # =========================================================
+  deploy:
+    needs:
+      - security-stage-1
+      # Uncomment later when enabling stages
+      # - security-stage-2
+      # - security-stage-3
+    
+    runs-on: ubuntu-latest
+
+    steps:
       - name: Deploy to VPS
         uses: appleboy/ssh-action@master
 
