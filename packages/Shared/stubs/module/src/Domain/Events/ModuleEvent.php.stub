@@ -1,0 +1,14 @@
+<?php
+
+namespace CodeGarage\{{moduleName}}\Domain\Events;
+
+use CodeGarage\Shared\Events\AbstractDomainEvent;
+
+class {{eventName}} extends AbstractDomainEvent
+{
+    public function __construct(
+        public readonly int|string $aggregateId,
+    ) {
+        parent::__construct();
+    }
+}

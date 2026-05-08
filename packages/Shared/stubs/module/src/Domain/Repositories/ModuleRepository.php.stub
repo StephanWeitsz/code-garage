@@ -1,0 +1,9 @@
+<?php
+
+namespace CodeGarage\{{moduleName}}\Domain\Repositories;
+
+use CodeGarage\Shared\Domain\Repositories\Repository;
+
+interface {{moduleName}}Repository extends Repository
+{
+}

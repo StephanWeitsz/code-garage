@@ -1,0 +1,19 @@
+{
+    "name": "Code Garage",
+    "short_name": "Code Garage",
+    "description": "A modular coding academy where students can learn, build and upgrade their skills.",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#020617",
+    "theme_color": "#0f172a",
+    "icons": [
+        {
+            "src": "/icons/icon.svg",
+            "sizes": "any",
+            "type": "image/svg+xml",
+            "purpose": "any maskable"
+        }
+    ]
+}
+
+

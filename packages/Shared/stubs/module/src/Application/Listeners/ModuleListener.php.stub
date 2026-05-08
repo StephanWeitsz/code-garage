@@ -1,0 +1,14 @@
+<?php
+
+namespace CodeGarage\{{moduleName}}\Application\Listeners;
+
+use CodeGarage\Shared\Listeners\QueuedListener;
+use CodeGarage\{{moduleName}}\Domain\Events\{{eventName}};
+
+class {{listenerName}} extends QueuedListener
+{
+    public function handle({{eventName}} $event): void
+    {
+        // React to the event here.
+    }
+}

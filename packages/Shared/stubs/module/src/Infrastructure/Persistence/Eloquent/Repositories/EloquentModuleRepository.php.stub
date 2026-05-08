@@ -1,0 +1,15 @@
+<?php
+
+namespace CodeGarage\{{moduleName}}\Infrastructure\Persistence\Eloquent\Repositories;
+
+use CodeGarage\Shared\Infrastructure\Persistence\EloquentRepository;
+use CodeGarage\{{moduleName}}\Domain\Repositories\{{moduleName}}Repository;
+use CodeGarage\{{moduleName}}\Infrastructure\Persistence\Eloquent\Models\{{moduleName}};
+
+class Eloquent{{moduleName}}Repository extends EloquentRepository implements {{moduleName}}Repository
+{
+    protected function modelClass(): string
+    {
+        return {{moduleName}}::class;
+    }
+}

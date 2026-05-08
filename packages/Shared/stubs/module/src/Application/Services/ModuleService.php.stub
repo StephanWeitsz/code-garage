@@ -1,0 +1,9 @@
+<?php
+
+namespace CodeGarage\{{moduleName}}\Application\Services;
+
+use CodeGarage\Shared\Application\Services\ApplicationService;
+
+class {{moduleName}}Service extends ApplicationService
+{
+}

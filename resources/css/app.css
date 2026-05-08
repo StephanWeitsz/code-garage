@@ -1,0 +1,968 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+[x-cloak] {
+    display: none;
+}
+
+@layer base {
+    :root {
+        color-scheme: dark;
+        --bg: #08111f;
+        --bg-accent: #0f1b33;
+        --surface: rgba(10, 18, 35, 0.9);
+        --surface-strong: rgba(15, 23, 42, 0.96);
+        --surface-soft: rgba(15, 23, 42, 0.72);
+        --line: rgba(148, 163, 184, 0.22);
+        --line-strong: rgba(56, 189, 248, 0.32);
+        --text: #e2e8f0;
+        --muted: #94a3b8;
+        --primary: #38bdf8;
+        --primary-strong: #0ea5e9;
+        --success: #22c55e;
+        --warning: #f59e0b;
+        --danger: #ef4444;
+    }
+
+    html {
+        @apply min-h-full scroll-smooth;
+        background:
+            radial-gradient(circle at top, rgba(14, 165, 233, 0.12), transparent 30%),
+            linear-gradient(180deg, #08111f 0%, #0b1220 48%, #040814 100%);
+    }
+
+    body {
+        @apply min-h-screen antialiased;
+        background: transparent;
+        color: var(--text);
+        font-family: Figtree, ui-sans-serif, system-ui, sans-serif;
+    }
+
+    a {
+        color: inherit;
+    }
+
+    h1,
+    h2,
+    h3 {
+        @apply font-semibold tracking-tight text-slate-50;
+    }
+
+    h1 {
+        @apply text-4xl leading-tight md:text-6xl;
+    }
+
+    h2 {
+        @apply text-2xl md:text-3xl;
+    }
+
+    p {
+        @apply leading-7;
+    }
+}
+
+@layer components {
+    .app-shell {
+        @apply min-h-screen;
+    }
+
+    .container {
+        @apply mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8;
+    }
+
+    .site-header {
+        position: sticky;
+        top: 0;
+        z-index: 40;
+        backdrop-filter: blur(16px);
+        background: rgba(8, 17, 31, 0.84);
+        border-bottom: 1px solid var(--line);
+    }
+
+    .nav-row {
+        @apply flex flex-col gap-4 py-4 md:flex-row md:items-center md:justify-between;
+    }
+
+    .brand {
+        @apply inline-flex items-center gap-3 no-underline;
+    }
+
+    .brand strong {
+        @apply block text-lg font-semibold text-slate-50;
+    }
+
+    .brand small {
+        @apply block text-xs uppercase tracking-[0.28em] text-sky-200/80;
+    }
+
+    .brand-mark {
+        @apply inline-flex h-12 w-12 items-center justify-center rounded-2xl border text-lg font-semibold;
+        border-color: var(--line-strong);
+        background: linear-gradient(135deg, rgba(14, 165, 233, 0.2), rgba(34, 197, 94, 0.12));
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+    }
+
+    .brand-icon {
+        @apply h-9 w-9 rounded-xl;
+    }
+
+    .main-nav {
+        @apply flex w-full flex-wrap items-center gap-3 text-sm font-medium text-slate-200 md:w-auto;
+    }
+
+    .main-nav-top {
+        @apply flex flex-wrap items-center gap-3;
+    }
+
+    .main-nav-secondary {
+        @apply flex flex-wrap items-center gap-3;
+    }
+
+    .main-nav a {
+        @apply rounded-full px-4 py-2 transition;
+        background: rgba(15, 23, 42, 0.45);
+        border: 1px solid transparent;
+    }
+
+    .main-nav a:hover {
+        border-color: var(--line-strong);
+        background: rgba(15, 23, 42, 0.82);
+    }
+
+    .nav-dropdown {
+        @apply relative w-auto min-w-0;
+    }
+
+    .nav-dropdown > summary {
+        @apply cursor-pointer select-none rounded-full px-4 py-2 text-left transition list-none;
+        background: rgba(15, 23, 42, 0.45);
+        border: 1px solid transparent;
+    }
+
+    .nav-dropdown > summary::-webkit-details-marker {
+        display: none;
+    }
+
+    .nav-dropdown > summary:hover {
+        border-color: var(--line-strong);
+        background: rgba(15, 23, 42, 0.82);
+    }
+
+    .nav-dropdown-menu {
+        @apply absolute left-0 top-[calc(100%+0.5rem)] z-50 hidden min-w-[14rem] flex-col gap-2 rounded-2xl border p-3;
+        border-color: var(--line);
+        background: rgba(2, 6, 23, 0.95);
+    }
+
+    .nav-dropdown[open] > .nav-dropdown-menu {
+        display: flex;
+    }
+
+    .main-nav-secondary .nav-dropdown:last-child .nav-dropdown-menu {
+        left: auto;
+        right: 0;
+    }
+
+    .nav-dropdown-menu a {
+        @apply rounded-xl px-3 py-2 text-sm;
+        background: rgba(15, 23, 42, 0.6);
+    }
+
+    .nav-dropdown-menu a:hover {
+        border-color: transparent;
+        background: rgba(15, 23, 42, 0.95);
+    }
+
+    .nav-dropdown-menu .button {
+        @apply w-full;
+    }
+
+    .nav-logout-form .button {
+        @apply w-full md:w-auto;
+    }
+
+    .page-content {
+        @apply py-10 md:py-14;
+    }
+
+    .hero-grid {
+        @apply grid gap-10 lg:grid-cols-[1.1fr_0.9fr] lg:items-center;
+    }
+
+    .hero-copy {
+        @apply mt-6 max-w-2xl text-lg text-slate-300;
+    }
+
+    .hero-actions {
+        @apply mt-8 flex flex-wrap gap-3;
+    }
+
+    .hero-panel {
+        @apply space-y-6;
+    }
+
+    .terminal-card,
+    .panel,
+    .course-card,
+    .stat-card {
+        border: 1px solid var(--line);
+        background: linear-gradient(180deg, var(--surface) 0%, var(--surface-strong) 100%);
+        box-shadow:
+            0 20px 60px rgba(2, 6, 23, 0.35),
+            inset 0 1px 0 rgba(255, 255, 255, 0.04);
+    }
+
+    .terminal-card,
+    .panel {
+        @apply rounded-3xl p-6 md:p-8;
+    }
+
+    .terminal-bar {
+        @apply mb-5 flex gap-2;
+    }
+
+    .terminal-bar span {
+        @apply h-3 w-3 rounded-full;
+        background: rgba(148, 163, 184, 0.55);
+    }
+
+    .terminal-bar span:nth-child(1) {
+        background: #f87171;
+    }
+
+    .terminal-bar span:nth-child(2) {
+        background: #fbbf24;
+    }
+
+    .terminal-bar span:nth-child(3) {
+        background: #4ade80;
+    }
+
+    .terminal-card pre {
+        @apply overflow-x-auto rounded-2xl border p-5 text-sm text-sky-100;
+        border-color: rgba(56, 189, 248, 0.18);
+        background: rgba(2, 6, 23, 0.72);
+    }
+
+    .stats-grid {
+        @apply grid gap-4 sm:grid-cols-2;
+    }
+
+    .stat-card,
+    .course-card {
+        @apply rounded-2xl p-5;
+    }
+
+    .stat-card strong,
+    .course-card strong {
+        @apply block text-lg text-slate-50;
+    }
+
+    .stat-card span,
+    .course-card p,
+    .muted {
+        @apply mt-2 text-sm text-slate-300;
+    }
+
+    .stack {
+        @apply space-y-8;
+    }
+
+    .section-heading {
+        @apply flex flex-col gap-3 md:flex-row md:items-end md:justify-between;
+    }
+
+    .eyebrow {
+        @apply mb-2 text-xs font-semibold uppercase tracking-[0.32em] text-sky-300;
+    }
+
+    .card-list {
+        @apply grid gap-5 md:grid-cols-2 xl:grid-cols-3;
+    }
+
+    .dashboard-featured-course-list {
+        display: grid;
+        gap: 1.25rem;
+        grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
+    }
+
+    .dashboard-featured-course-list .course-card {
+        min-height: 11.5rem;
+    }
+
+    .dashboard-course-description {
+        display: -webkit-box;
+        overflow: hidden;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 3;
+    }
+
+    .course-card {
+        @apply block transition duration-200;
+        text-decoration: none;
+    }
+
+    .course-card:hover {
+        transform: translateY(-2px);
+        border-color: var(--line-strong);
+    }
+
+    .course-card-title {
+        @apply mb-4 block;
+    }
+
+    .course-card-image {
+        @apply mb-4 h-36 w-full rounded-xl object-cover;
+        border: 1px solid rgba(148, 163, 184, 0.2);
+        background: rgba(15, 23, 42, 0.65);
+    }
+
+    .course-card-image-fallback {
+        background:
+            linear-gradient(135deg, rgba(14, 165, 233, 0.18), rgba(34, 197, 94, 0.12)),
+            radial-gradient(circle at 20% 20%, rgba(56, 189, 248, 0.22), transparent 40%),
+            rgba(15, 23, 42, 0.62);
+    }
+
+    .course-meta {
+        @apply mb-4 flex flex-wrap gap-2;
+    }
+
+    .course-detail-image {
+        @apply h-44 w-full rounded-xl object-cover;
+        border: 1px solid rgba(148, 163, 184, 0.2);
+        background: rgba(15, 23, 42, 0.65);
+    }
+
+    .course-description {
+        white-space: pre-line;
+    }
+
+    .course-detail-overview {
+        @apply p-5 md:p-6;
+    }
+
+    .course-detail-overview-grid {
+        @apply grid gap-5 md:grid-cols-2 md:gap-10 md:items-start;
+    }
+
+    .course-detail-overview-grid > div {
+        @apply px-2;
+    }
+
+    .course-side-pricing {
+        @apply w-full rounded-2xl border p-4;
+        border-color: rgba(56, 189, 248, 0.35);
+        background: linear-gradient(135deg, rgba(14, 165, 233, 0.2), rgba(34, 197, 94, 0.08));
+    }
+
+    .course-price-main {
+        @apply block text-2xl font-bold text-slate-50;
+    }
+
+    .course-requirements-grid {
+        @apply grid gap-4;
+    }
+
+    .course-requirements-card {
+        @apply rounded-2xl border p-4 pb-4;
+        border-color: rgba(148, 163, 184, 0.2);
+        background: rgba(15, 23, 42, 0.55);
+    }
+
+    .course-requirements-card h3 {
+        @apply mb-3 text-lg;
+    }
+
+    .course-requirements-list {
+        @apply space-y-3 pl-5 text-sm text-slate-200;
+    }
+
+    .course-requirements-list li {
+        @apply leading-6;
+    }
+
+    .course-requirements-list a {
+        @apply ml-2 underline underline-offset-2 text-sky-200;
+    }
+    .pill {
+        @apply inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em];
+        background: rgba(14, 165, 233, 0.12);
+        color: #bae6fd;
+        border: 1px solid rgba(56, 189, 248, 0.22);
+    }
+
+    .pill-muted {
+        background: rgba(148, 163, 184, 0.1);
+        color: #cbd5e1;
+        border-color: rgba(148, 163, 184, 0.18);
+    }
+
+    .button {
+        @apply inline-flex items-center justify-center rounded-full px-5 py-3 text-sm font-semibold transition;
+        text-decoration: none;
+    }
+
+    .button-primary {
+        background: linear-gradient(135deg, var(--primary), var(--success));
+        color: #03111f;
+        box-shadow: 0 18px 40px rgba(14, 165, 233, 0.2);
+    }
+
+    .button-primary:hover {
+        transform: translateY(-1px);
+        filter: brightness(1.03);
+    }
+
+    .button-secondary {
+        color: var(--text);
+        background: rgba(15, 23, 42, 0.7);
+        border: 1px solid var(--line);
+    }
+
+    .button-secondary:hover {
+        border-color: var(--line-strong);
+        background: rgba(15, 23, 42, 0.95);
+    }
+
+    .label,
+    .form-label {
+        @apply mb-2 block text-sm font-semibold text-slate-200;
+    }
+
+    .input,
+    .form-input,
+    .form-select,
+    .form-textarea {
+        @apply block w-full rounded-2xl border px-4 py-3 text-sm text-slate-100 transition;
+        border-color: rgba(148, 163, 184, 0.2);
+        background: rgba(15, 23, 42, 0.8);
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03);
+    }
+
+    .input::placeholder,
+    .form-input::placeholder,
+    .form-textarea::placeholder {
+        color: #64748b;
+    }
+
+    .input:focus,
+    .form-input:focus,
+    .form-select:focus,
+    .form-textarea:focus {
+        outline: none;
+        border-color: rgba(56, 189, 248, 0.48);
+        box-shadow: 0 0 0 4px rgba(14, 165, 233, 0.12);
+    }
+
+    textarea.input,
+    textarea.form-textarea {
+        min-height: 110px;
+        resize: vertical;
+    }
+
+    input[type="file"].input,
+    input[type="file"].form-input {
+        @apply py-2;
+    }
+
+    .account-button-danger {
+        color: #fee2e2;
+        background: rgba(127, 29, 29, 0.55);
+        border: 1px solid rgba(248, 113, 113, 0.28);
+    }
+
+    .account-button-danger:hover {
+        background: rgba(153, 27, 27, 0.72);
+        border-color: rgba(248, 113, 113, 0.42);
+    }
+
+    .grid-two {
+        @apply grid gap-6 xl:grid-cols-2;
+    }
+
+    .flash-message {
+        @apply mb-6 rounded-2xl border px-4 py-3 text-sm text-emerald-100;
+        border-color: rgba(34, 197, 94, 0.28);
+        background: rgba(20, 83, 45, 0.35);
+    }
+
+    .auth-shell {
+        @apply min-h-screen;
+        background:
+            radial-gradient(circle at top right, rgba(34, 197, 94, 0.08), transparent 28%),
+            radial-gradient(circle at top left, rgba(56, 189, 248, 0.12), transparent 32%),
+            linear-gradient(180deg, #08111f 0%, #0a1220 48%, #050813 100%);
+    }
+
+    .auth-grid {
+        @apply container grid min-h-screen gap-8 py-10 lg:grid-cols-[1.05fr_0.95fr] lg:items-center;
+    }
+
+    .auth-panel {
+        @apply rounded-[2rem] border p-6 md:p-8;
+        border-color: var(--line);
+        background: linear-gradient(180deg, rgba(8, 17, 31, 0.78) 0%, rgba(15, 23, 42, 0.92) 100%);
+        box-shadow:
+            0 24px 80px rgba(2, 6, 23, 0.38),
+            inset 0 1px 0 rgba(255, 255, 255, 0.04);
+    }
+
+    .auth-panel-feature {
+        @apply space-y-8;
+    }
+
+    .auth-panel-form {
+        @apply mx-auto w-full max-w-xl;
+    }
+
+    .auth-copy {
+        @apply max-w-2xl;
+    }
+
+    .auth-form-header {
+        @apply mb-6;
+    }
+
+    .auth-form {
+        @apply space-y-5;
+    }
+
+    .auth-field {
+        @apply space-y-2;
+    }
+
+    .auth-label {
+        @apply text-sm font-semibold text-slate-200;
+    }
+
+    .auth-input {
+        @apply block w-full rounded-2xl border px-4 py-3 text-sm text-slate-100 transition;
+        border-color: rgba(148, 163, 184, 0.18);
+        background: rgba(15, 23, 42, 0.82);
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03);
+    }
+
+    .auth-input::placeholder {
+        color: #64748b;
+    }
+
+    .auth-input:focus {
+        outline: none;
+        border-color: rgba(56, 189, 248, 0.48);
+        box-shadow: 0 0 0 4px rgba(14, 165, 233, 0.12);
+    }
+
+    .auth-input[type="date"],
+    .auth-input[type="datetime-local"],
+    .auth-input[type="file"],
+    select.auth-input,
+    textarea.auth-input {
+        color: #e2e8f0 !important;
+        background: rgba(15, 23, 42, 0.82) !important;
+        color-scheme: dark;
+    }
+
+    .auth-input[type="file"]::file-selector-button {
+        @apply rounded-lg border px-3 py-1 text-sm;
+        color: #e2e8f0;
+        border-color: rgba(148, 163, 184, 0.2);
+        background: rgba(30, 41, 59, 0.9);
+        margin-right: 0.75rem;
+        cursor: pointer;
+    }
+
+    .auth-actions {
+        @apply flex flex-col gap-4 pt-2 sm:flex-row sm:items-center sm:justify-between;
+    }
+
+    .auth-check {
+        @apply flex items-start gap-3 text-sm text-slate-300;
+    }
+
+    .auth-checkbox {
+        @apply mt-1 h-4 w-4 rounded border-slate-500 bg-slate-900 text-sky-400 focus:ring-sky-400;
+    }
+
+    .auth-link {
+        @apply text-sm font-medium text-sky-300 transition;
+    }
+
+    .auth-link:hover {
+        @apply text-sky-200;
+    }
+
+    .auth-switch {
+        @apply mt-6 text-sm text-slate-300;
+    }
+
+    .auth-alert {
+        @apply mb-5 rounded-2xl border px-4 py-3 text-sm;
+    }
+
+    .auth-alert-success {
+        border-color: rgba(34, 197, 94, 0.24);
+        background: rgba(20, 83, 45, 0.34);
+        color: #dcfce7;
+    }
+
+    .auth-alert-error {
+        border-color: rgba(248, 113, 113, 0.24);
+        background: rgba(127, 29, 29, 0.3);
+        color: #fecaca;
+    }
+
+    .auth-error {
+        @apply mt-2 block text-sm text-red-200;
+    }
+
+    .account-shell {
+        @apply pb-8;
+    }
+
+    .account-section {
+        @apply grid gap-6 md:grid-cols-3 md:items-start;
+    }
+
+    .account-section-heading {
+        @apply space-y-3;
+    }
+
+    .account-panel {
+        @apply rounded-[2rem];
+    }
+
+    .account-actions {
+        @apply flex flex-col-reverse gap-3 rounded-[1.5rem] border px-5 py-4 sm:flex-row sm:items-center sm:justify-end;
+        border-color: rgba(148, 163, 184, 0.16);
+        background: rgba(15, 23, 42, 0.58);
+    }
+
+    .account-divider {
+        @apply border-t;
+        border-color: rgba(148, 163, 184, 0.14);
+    }
+
+    .lecturer-spotlight {
+        @apply space-y-6;
+    }
+
+    .lecturer-card-link {
+        @apply block no-underline;
+    }
+
+    .lecturer-identity {
+        @apply flex items-center gap-4;
+    }
+
+    .lecturer-identity-large {
+        @apply items-start gap-6;
+    }
+
+    .lecturer-avatar {
+        @apply h-20 w-20 rounded-3xl object-cover border;
+        border-color: rgba(56, 189, 248, 0.22);
+        background: rgba(15, 23, 42, 0.7);
+    }
+
+    .lecturer-avatar-large {
+        @apply h-28 w-28 md:h-32 md:w-32;
+    }
+
+    .lecturer-headline {
+        @apply mt-2 text-base text-slate-300;
+    }
+
+    .lecturer-headline-large {
+        @apply max-w-3xl text-lg;
+    }
+
+    .lecturer-bio {
+        @apply text-sm text-slate-300;
+    }
+
+    .lecturer-course-preview {
+        @apply space-y-4;
+    }
+
+    .lecturer-course-list {
+        @apply grid gap-3;
+    }
+
+    .lecturer-course-item {
+        @apply block rounded-2xl border px-4 py-4 transition;
+        border-color: rgba(148, 163, 184, 0.16);
+        background: rgba(15, 23, 42, 0.52);
+        text-decoration: none;
+    }
+
+    .lecturer-course-item:hover {
+        border-color: var(--line-strong);
+        background: rgba(15, 23, 42, 0.82);
+    }
+
+    .lecturer-course-item strong {
+        @apply block text-slate-50;
+    }
+
+    .lecturer-course-item span {
+        @apply mt-1 block text-sm text-slate-300;
+    }
+
+    .lecturer-profile-hero {
+        @apply space-y-8;
+    }
+
+    .lecturer-mini-panel {
+        @apply h-full;
+    }
+
+    .lecturer-mini-panel h3 {
+        @apply text-xl;
+    }
+
+    .lecturer-stats-grid {
+        @apply mt-4 gap-4;
+    }
+
+    .course-hero {
+        @apply grid gap-6 xl:grid-cols-[1.2fr_0.8fr] xl:items-start;
+    }
+
+    .course-sidecard {
+        @apply rounded-3xl border p-6 space-y-5;
+        border-color: var(--line);
+        background: linear-gradient(180deg, var(--surface) 0%, var(--surface-strong) 100%);
+        box-shadow:
+            0 20px 60px rgba(2, 6, 23, 0.35),
+            inset 0 1px 0 rgba(255, 255, 255, 0.04);
+    }
+
+    .progress-ring {
+        @apply flex flex-col items-center justify-center rounded-3xl border px-6 py-8 text-center;
+        border-color: rgba(56, 189, 248, 0.2);
+        background: rgba(2, 6, 23, 0.5);
+    }
+
+    .progress-ring strong {
+        @apply text-3xl text-slate-50;
+    }
+
+    .progress-ring span {
+        @apply mt-2 text-sm uppercase tracking-[0.2em] text-slate-300;
+    }
+
+    .course-lecturer-pricing-panel {
+        @apply grid gap-4 rounded-2xl border p-4 sm:grid-cols-[8.5rem_1fr];
+        border-color: rgba(148, 163, 184, 0.16);
+        background: rgba(15, 23, 42, 0.52);
+    }
+
+    .course-lecturer-photo-link {
+        @apply block overflow-hidden rounded-2xl border no-underline transition;
+        border-color: rgba(56, 189, 248, 0.2);
+        background: rgba(2, 6, 23, 0.5);
+    }
+
+    .course-lecturer-photo-link:hover,
+    .course-lecturer-detail-link:hover {
+        border-color: var(--line-strong);
+    }
+
+    .course-lecturer-photo {
+        @apply h-48 w-full object-cover sm:h-full;
+        min-height: 11rem;
+    }
+
+    .course-lecturer-pricing-details {
+        @apply grid gap-4;
+    }
+
+    .course-lecturer-detail-link {
+        @apply block rounded-2xl border p-4 no-underline transition;
+        border-color: rgba(148, 163, 184, 0.16);
+        background: rgba(2, 6, 23, 0.28);
+    }
+
+    .course-lecturer-detail-link strong {
+        @apply mt-2 block text-lg text-slate-50;
+    }
+
+    .course-lecturer-detail-link span:not(.eyebrow) {
+        @apply mt-1 block text-sm text-slate-300;
+    }
+
+    .course-lecturer-detail-link p {
+        @apply mt-3 text-sm leading-6;
+    }
+
+    .enrolled-badge {
+        @apply inline-flex items-center rounded-full px-4 py-2 text-sm font-semibold uppercase tracking-[0.18em];
+        color: #dcfce7;
+        background: rgba(20, 83, 45, 0.34);
+        border: 1px solid rgba(34, 197, 94, 0.24);
+    }
+
+    .lesson-list {
+        @apply grid gap-5;
+    }
+
+    .lesson-row {
+        @apply flex items-center gap-4 rounded-2xl border px-5 py-5 no-underline transition;
+        border-color: rgba(148, 163, 184, 0.16);
+        background: rgba(15, 23, 42, 0.52);
+    }
+
+    .lesson-row:hover {
+        border-color: var(--line-strong);
+        background: rgba(15, 23, 42, 0.82);
+    }
+
+    .lesson-seq {
+        @apply inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl text-sm font-semibold;
+        background: rgba(56, 189, 248, 0.12);
+        color: #bae6fd;
+        border: 1px solid rgba(56, 189, 248, 0.22);
+    }
+
+    .prose-panel {
+        @apply prose prose-invert max-w-none;
+    }
+
+    .prose-panel pre {
+        @apply overflow-x-auto rounded-2xl border p-5;
+        border-color: rgba(56, 189, 248, 0.18);
+        background: rgba(2, 6, 23, 0.72);
+    }
+}
+
+@layer components {
+    .course-card-catalog {
+        @apply flex h-full flex-col;
+    }
+
+    .course-card-catalog p {
+        @apply flex-1;
+    }
+
+    .course-card-catalog .button {
+        @apply mt-4 self-start;
+    }
+}
+
+@layer components {
+    .lesson-row-locked {
+        @apply cursor-not-allowed opacity-70;
+    }
+
+    .lesson-row-locked:hover {
+        border-color: rgba(148, 163, 184, 0.16);
+        background: rgba(15, 23, 42, 0.52);
+    }
+
+    .lesson-lock {
+        @apply ms-auto inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em];
+        color: #fde68a;
+        background: rgba(120, 53, 15, 0.35);
+        border: 1px solid rgba(245, 158, 11, 0.24);
+    }
+}
+
+@layer components {
+    .management-badge {
+        @apply inline-flex items-center rounded-full px-4 py-2 text-xs font-semibold uppercase tracking-[0.2em];
+        color: #dbeafe;
+        background: rgba(30, 64, 175, 0.28);
+        border: 1px solid rgba(96, 165, 250, 0.24);
+    }
+}
+.course-sections {
+    display: grid;
+    gap: 1.25rem;
+}
+
+.course-sections-compact {
+    gap: 1rem;
+}
+
+.course-section-card {
+    display: grid;
+    gap: 1.35rem;
+    padding: 1.25rem;
+    border: 1px solid rgba(148, 163, 184, 0.18);
+    border-radius: 1.25rem;
+    background: rgba(15, 23, 42, 0.22);
+}
+
+.course-section-card-compact {
+    padding: 1rem;
+}
+
+.course-section-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.course-section-header-compact {
+    justify-content: flex-start;
+}
+
+.course-section-header h3 {
+    margin: 0.35rem 0 0;
+}
+
+.course-section-index {
+    display: inline-block;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #7dd3fc;
+}
+
+.lesson-row-active {
+    border-color: rgba(56, 189, 248, 0.5);
+    box-shadow: inset 0 0 0 1px rgba(56, 189, 248, 0.2);
+}
+
+.lesson-row-completed {
+    border-color: rgba(34, 197, 94, 0.45);
+}
+
+.lesson-completed-pill {
+    margin-left: auto;
+    display: inline-flex;
+    align-items: center;
+    border-radius: 999px;
+    padding: 0.28rem 0.65rem;
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #dcfce7;
+    background: rgba(20, 83, 45, 0.34);
+    border: 1px solid rgba(34, 197, 94, 0.24);
+}
+
+.deployment-output {
+    white-space: pre-wrap;
+    word-break: break-word;
+    border-radius: 0.75rem;
+    border: 1px solid rgba(148, 163, 184, 0.2);
+    background: rgba(2, 6, 23, 0.65);
+    padding: 0.85rem 1rem;
+    margin: 0;
+    font-size: 0.86rem;
+    line-height: 1.45;
+    color: #e2e8f0;
+}
+
+@media (max-width: 768px) {
+    .course-section-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}

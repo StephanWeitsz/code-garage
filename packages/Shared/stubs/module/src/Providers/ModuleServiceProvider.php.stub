@@ -1,0 +1,24 @@
+<?php
+
+namespace CodeGarage\{{moduleName}}\Providers;
+
+use CodeGarage\Shared\Providers\BaseModuleServiceProvider;
+
+class {{moduleName}}ServiceProvider extends BaseModuleServiceProvider
+{
+    protected string $moduleName = '{{moduleName}}';
+
+    protected string $moduleNameLower = '{{moduleLower}}';
+
+    protected array $moduleBindings = [
+        // Contracts go here.
+    ];
+
+    protected array $moduleSingletons = [
+        // Stateless services go here.
+    ];
+
+    protected array $listen = [
+        // Event::class => [Listener::class],
+    ];
+}

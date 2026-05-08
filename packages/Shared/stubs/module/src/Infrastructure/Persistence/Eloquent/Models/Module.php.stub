@@ -1,0 +1,10 @@
+<?php
+
+namespace CodeGarage\{{moduleName}}\Infrastructure\Persistence\Eloquent\Models;
+
+use Illuminate\Database\Eloquent\Model;
+
+class {{moduleName}} extends Model
+{
+    protected $guarded = [];
+}
