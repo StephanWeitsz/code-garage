@@ -1,7 +1,7 @@
 @extends('layouts.app', ['title' => 'Code Garage'])
 
 @section('content')
-    <section class="hero-grid">
+    <section class="hero-grid" style="align-items: flex-start;">
         <div>
             <p class="eyebrow">Learn and build</p>
             <h1>Code Garage helps people learn to code and shape software ideas into real projects.</h1>
@@ -79,4 +79,3 @@
         </div>
     </section>
 @endsection
-
