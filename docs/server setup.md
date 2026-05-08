@@ -329,12 +329,12 @@ Add public key to GitHub (Deploy Keys)
 ## GitHub Action
 
 ```yaml
-name: Deploy Laravel
+name: Deploy Laravel App
 
 on:
   push:
     branches:
-      - main
+      - master
 
 jobs:
   deploy:
@@ -342,19 +342,63 @@ jobs:
 
     steps:
       - name: Deploy to VPS
-        uses: appleboy/ssh-action@v1.0.0
+        uses: appleboy/ssh-action@master
+
         with:
-          host: ${{ secrets.SERVER_IP }}
+          host: ${{ secrets.SERVER_HOST }}
           username: ${{ secrets.SERVER_USER }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          key: ${{ secrets.SERVER_SSH_KEY }}
           script: |
-            cd /var/www/codegarage
-            git pull origin main
-            composer install --no-dev --optimize-autoloader
-            php artisan migrate --force
-            php artisan config:cache
-            php artisan route:cache
+            /home/deploy/deploy.sh
 ```
+deploy.sh 
+
+```bash
+#!/bin/bash
+
+set -e
+
+cd /var/www/code-garage
+
+echo "Place server in Maintenance Mode"
+php artisan down || true
+
+echo "Pulling latest code..."
+git pull origin master
+
+echo "Installing composer packages..."
+composer install --no-dev --optimize-autoloader
+
+echo "Running migrations..."
+php artisan migrate --force
+
+echo "Creating storage link..."
+php artisan storage:link || true
+
+echo "Clearing caches..."
+php artisan optimize:clear
+
+echo "Caching config/routes/views..."
+php artisan config:cache
+
+echo "Caching config/routes/views..."
+php artisan config:cache
+php artisan route:cache
+php artisan view:cache
+
+echo "Building frontend..."
+npm install
+npm run build
+
+echo "Restarting queue..."
+php artisan queue:restart
+
+php artisan up
+echo "Restoring Service"
+
+echo "Deployment complete!"
+```
+
 
 ---
 
