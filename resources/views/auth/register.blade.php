@@ -2,7 +2,7 @@
     <section class="auth-grid">
         <div class="auth-panel auth-panel-feature">
             <a href="{{ route('welcome') }}" class="brand">
-                <span class="brand-mark"><img src="{{ asset('icons/icon.svg') }}" alt="Code Garage icon" class="brand-icon"></span>
+                <span class="brand-mark"><img src="{{ asset('icons/icon.png') }}" alt="Code Garage icon" class="brand-icon"></span>
                 <span>
                     <strong>Code Garage</strong>
                     <small>Learn, build and upgrade your skills</small>

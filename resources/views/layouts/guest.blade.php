@@ -6,8 +6,8 @@
         <meta name="csrf-token" content="{{ csrf_token() }}">
         <meta name="theme-color" content="#0f172a">
         <link rel="manifest" href="/manifest.webmanifest">
-        <link rel="icon" type="image/svg+xml" href="/icons/icon.svg">
-        <link rel="apple-touch-icon" href="/icons/icon.svg">
+        <link rel="icon" type="image/svg+xml" href="/icons/icon.png">
+        <link rel="apple-touch-icon" href="/icons/icon.png">
 
         <title>{{ $title ?? 'Code Garage' }}</title>
         <link rel="preconnect" href="https://fonts.bunny.net">

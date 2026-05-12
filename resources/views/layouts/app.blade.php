@@ -5,8 +5,8 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="theme-color" content="#0f172a">
         <link rel="manifest" href="/manifest.webmanifest">
-        <link rel="icon" type="image/svg+xml" href="/icons/icon.svg">
-        <link rel="apple-touch-icon" href="/icons/icon.svg">
+        <link rel="icon" type="image/svg+xml" href="/icons/icon.png">
+        <link rel="apple-touch-icon" href="/icons/icon.png">
         <title>{{ $title ?? 'Code Garage' }}</title>
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
@@ -14,7 +14,7 @@
         <header class="site-header">
             <div class="container nav-row">
                 <a href="{{ route('welcome') }}" class="brand">
-                    <span class="brand-mark"><img src="{{ asset('icons/icon.svg') }}" alt="Code Garage icon" class="brand-icon"></span>
+                    <span class="brand-mark"><img src="{{ asset('icons/icon.png') }}" alt="Code Garage icon" class="brand-icon"></span>
                     <span>
                         <strong>Code Garage</strong>
                         <small>Learn, build and upgrade your skills</small>
