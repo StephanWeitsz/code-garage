@@ -18,7 +18,7 @@ class EventResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-calendar-days';
 
-    protected static ?string $navigationGroup = 'Learning';
+    protected static ?string $navigationGroup = 'Community';
 
     public static function form(Form $form): Form
     {

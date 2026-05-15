@@ -10,7 +10,10 @@ use CodeGarage\Courses\Infrastructure\Persistence\Eloquent\Models\Course;
 use CodeGarage\Enrollments\Infrastructure\Persistence\Eloquent\Models\Enrollment;
 use CodeGarage\Lessons\Infrastructure\Persistence\Eloquent\Models\CourseSection;
 use CodeGarage\Lessons\Infrastructure\Persistence\Eloquent\Models\Lesson;
+use CodeGarage\Posts\Infrastructure\Persistence\Eloquent\Models\Post;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 use Tests\TestCase;
@@ -285,5 +288,78 @@ class PostsDiscussionTest extends TestCase
             'id' => $post->id,
             'status' => 'published',
         ]);
+    }
+
+    public function test_only_active_ads_are_visible_publicly(): void
+    {
+        $author = User::factory()->create();
+
+        $activeAd = Post::query()->create([
+            'author_id' => $author->id,
+            'title' => 'Holiday Robotics Workshop',
+            'body' => 'Build and program a small robotics project during the school holiday.',
+            'type' => 'ad',
+            'status' => 'active',
+            'cta_label' => 'Book a seat',
+            'cta_url' => 'https://example.com/robotics',
+            'starts_at' => now()->subDay(),
+            'ends_at' => now()->addWeek(),
+        ]);
+
+        $inactiveAd = Post::query()->create([
+            'author_id' => $author->id,
+            'title' => 'Hidden Promotion',
+            'body' => 'This should not be public.',
+            'type' => 'ad',
+            'status' => 'inactive',
+        ]);
+
+        $this->get('/')
+            ->assertOk()
+            ->assertSeeText('Holiday Robotics Workshop')
+            ->assertDontSeeText('Hidden Promotion');
+
+        $this->get("/ads/{$activeAd->id}")
+            ->assertOk()
+            ->assertSeeText('Holiday Robotics Workshop')
+            ->assertSeeText('Book a seat');
+
+        $this->get("/ads/{$inactiveAd->id}")
+            ->assertNotFound();
+    }
+
+    public function test_privileged_user_can_create_visible_ad_with_image_from_posts_form(): void
+    {
+        Storage::fake('public');
+
+        $admin = User::factory()->create();
+
+        Permission::findOrCreate('posts.view', 'web');
+        Permission::findOrCreate('posts.create', 'web');
+
+        $admin->givePermissionTo(['posts.view', 'posts.create']);
+
+        $this->actingAs($admin)->post('/posts', [
+            'title' => 'Python Bootcamp Open Day',
+            'body' => 'Join the open day and see what students build in the first month.',
+            'type' => 'ad',
+            'is_active' => '1',
+            'starts_at' => now('Africa/Johannesburg')->format('Y-m-d\TH:i'),
+            'ends_at' => now('Africa/Johannesburg')->addWeek()->format('Y-m-d\TH:i'),
+            'cta_label' => 'Register',
+            'cta_url' => 'https://example.com/register',
+            'image' => UploadedFile::fake()->image('open-day.png', 900, 500),
+        ])->assertRedirect('/posts');
+
+        $ad = Post::query()->where('type', 'ad')->firstOrFail();
+
+        $this->assertSame('active', $ad->status);
+        $this->assertNotNull($ad->image_path);
+        $this->assertTrue($ad->starts_at->lessThanOrEqualTo(now()));
+        Storage::disk('public')->assertExists($ad->image_path);
+
+        $this->get('/')
+            ->assertOk()
+            ->assertSeeText('Python Bootcamp Open Day');
     }
 }

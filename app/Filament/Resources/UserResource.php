@@ -98,7 +98,7 @@ class UserResource extends Resource
                             ->live(),
                         Forms\Components\Toggle::make('is_featured_lecturer')
                             ->label('Featured lecturer on homepage')
-                            ->helperText('Only one lecturer can be featured at a time. Turn this on for the lecturer you want highlighted on the landing page.')
+                            ->helperText('Featured lecturers appear together on the public homepage.')
                             ->visible(fn (Forms\Get $get) => static::hasLecturerRole($get('roles'))),
                     ]),
                 Forms\Components\Section::make('Public lecturer profile')

@@ -55,18 +55,6 @@ class User extends Authenticatable implements FilamentUser
         'profile_photo_url',
     ];
 
-    protected static function booted(): void
-    {
-        static::saved(function (User $user) {
-            if ($user->is_featured_lecturer) {
-                static::query()
-                    ->whereKeyNot($user->getKey())
-                    ->where('is_featured_lecturer', true)
-                    ->update(['is_featured_lecturer' => false]);
-            }
-        });
-    }
-
     public function canAccessPanel(Panel $panel): bool
     {
         return match ($panel->getId()) {

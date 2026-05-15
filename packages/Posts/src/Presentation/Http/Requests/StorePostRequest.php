@@ -20,7 +20,13 @@ class StorePostRequest extends FormRequest
             'lesson_id' => ['nullable', 'integer', 'exists:lessons,id'],
             'title' => ['nullable', 'string', 'max:180'],
             'body' => ['required', 'string'],
-            'type' => ['nullable', 'in:discussion,announcement,absence_notice'],
+            'type' => ['nullable', 'in:discussion,announcement,absence_notice,ad'],
+            'image' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:4096'],
+            'cta_label' => ['nullable', 'string', 'max:80'],
+            'cta_url' => ['nullable', 'url', 'max:255'],
+            'starts_at' => ['nullable', 'date'],
+            'ends_at' => ['nullable', 'date', 'after_or_equal:starts_at'],
+            'is_active' => ['nullable', 'boolean'],
             'is_pinned' => ['nullable', 'boolean'],
         ];
     }

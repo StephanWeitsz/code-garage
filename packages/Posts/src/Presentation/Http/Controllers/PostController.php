@@ -3,6 +3,7 @@
 namespace CodeGarage\Posts\Presentation\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use Carbon\Carbon;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -28,7 +29,7 @@ class PostController extends Controller
         $selectedType = (string) $request->query('type', '');
         $selectedLessonId = $request->query('lesson_id');
 
-        if (! in_array($selectedType, ['', 'announcement', 'discussion', 'absence_notice'], true)) {
+        if (! in_array($selectedType, ['', 'announcement', 'discussion', 'absence_notice', 'ad'], true)) {
             $selectedType = '';
         }
 
@@ -68,7 +69,23 @@ class PostController extends Controller
         return view('posts::show', [
             'post' => $record,
             'canManageLifecycle' => $canManageLifecycle,
-            'isReplyLocked' => in_array($record->status, ['closed', 'archived'], true),
+            'isReplyLocked' => $record->isAd() || in_array($record->status, ['closed', 'archived', 'inactive'], true),
+            'isPublicAd' => false,
+        ]);
+    }
+
+    public function publicAd(int $post, PostService $posts): View
+    {
+        $record = $posts->find($post);
+
+        abort_if($record === null || ! $record->isAd(), 404);
+        abort_unless(Post::query()->visibleToPublic()->whereKey($record->id)->exists(), 404);
+
+        return view('posts::show', [
+            'post' => $record,
+            'canManageLifecycle' => false,
+            'isReplyLocked' => true,
+            'isPublicAd' => true,
         ]);
     }
 
@@ -112,13 +129,25 @@ class PostController extends Controller
             $isPinned = (bool) $request->validated('is_pinned', false);
         }
 
+        $imagePath = $request->hasFile('image')
+            ? $request->file('image')->store('ads', 'public')
+            : null;
+
+        $startsAt = $this->normalizeLocalDateTime($request->validated('starts_at'));
+        $endsAt = $this->normalizeLocalDateTime($request->validated('ends_at'));
+
         $posts->create([
             'course_id' => $courseId,
             'lesson_id' => $lesson?->id,
             'author_id' => $user->id,
             'title' => $title,
             'body' => (string) $request->validated('body'),
-            'status' => 'published',
+            'image_path' => $imagePath,
+            'cta_label' => $request->validated('cta_label'),
+            'cta_url' => $request->validated('cta_url'),
+            'starts_at' => $startsAt,
+            'ends_at' => $endsAt,
+            'status' => $type === 'ad' && ! (bool) $request->validated('is_active', true) ? 'inactive' : ($type === 'ad' ? 'active' : 'published'),
             'type' => $type,
             'is_pinned' => $isPinned,
         ]);
@@ -215,5 +244,14 @@ class PostController extends Controller
         }
 
         return (int) $post->author_id === (int) $user->id;
+    }
+
+    protected function normalizeLocalDateTime(?string $value): ?Carbon
+    {
+        if (blank($value)) {
+            return null;
+        }
+
+        return Carbon::parse($value, 'Africa/Johannesburg')->utc();
     }
 }

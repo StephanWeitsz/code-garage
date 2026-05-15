@@ -24,7 +24,7 @@ class PostService extends ApplicationService
             ->with(['author', 'course', 'lesson'])
             ->when(
                 ! $canManage,
-                fn ($query) => $query->whereIn('status', ['published', 'closed'])
+                fn ($query) => $query->whereIn('status', ['published', 'closed', 'active'])
             )
             ->when(
                 filled($filters['type'] ?? null),

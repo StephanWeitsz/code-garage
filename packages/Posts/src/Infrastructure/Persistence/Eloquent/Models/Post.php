@@ -3,6 +3,7 @@
 namespace CodeGarage\Posts\Infrastructure\Persistence\Eloquent\Models;
 
 use App\Models\User;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -17,13 +18,20 @@ class Post extends Model
         'author_id',
         'title',
         'body',
+        'image_path',
+        'cta_label',
+        'cta_url',
         'type',
         'status',
+        'starts_at',
+        'ends_at',
         'is_pinned',
     ];
 
     protected $casts = [
         'is_pinned' => 'boolean',
+        'starts_at' => 'datetime',
+        'ends_at' => 'datetime',
     ];
 
     public function author(): BelongsTo
@@ -44,5 +52,28 @@ class Post extends Model
     public function replies(): HasMany
     {
         return $this->hasMany(PostReply::class)->orderBy('created_at');
+    }
+
+    public function scopeVisibleToPublic(Builder $query): Builder
+    {
+        return $query
+            ->where('type', 'ad')
+            ->where('status', 'active')
+            ->where(function (Builder $inner) {
+                $inner->whereNull('starts_at')->orWhere('starts_at', '<=', now());
+            })
+            ->where(function (Builder $inner) {
+                $inner->whereNull('ends_at')->orWhere('ends_at', '>=', now());
+            });
+    }
+
+    public function isAd(): bool
+    {
+        return $this->type === 'ad';
+    }
+
+    public function imageUrl(): ?string
+    {
+        return $this->image_path ? '/storage/'.ltrim($this->image_path, '/') : null;
     }
 }

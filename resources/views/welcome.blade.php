@@ -16,57 +16,69 @@
             </div>
         </div>
 
-        <div class="hero-panel">
-            @if ($featuredLecturer)
+        <div class="hero-panel stack">
+            @if ($activeAds->isNotEmpty())
+                <div class="ad-card-grid ad-card-grid-single">
+                    @foreach ($activeAds as $ad)
+                        <article class="ad-card">
+                            @if ($ad->imageUrl())
+                                <img src="{{ $ad->imageUrl() }}" alt="{{ $ad->title }}" class="ad-card-image">
+                            @endif
+                            <div class="ad-card-body">
+                                <span class="pill">Ad</span>
+                                <h2>{{ $ad->title }}</h2>
+                                <p>{{ \Illuminate\Support\Str::limit($ad->body, 150) }}</p>
+                                <div class="hero-actions">
+                                    <a href="{{ route('posts.public-ad', $ad->id) }}" class="button button-secondary">View details</a>
+                                    @if ($ad->cta_url)
+                                        <a href="{{ $ad->cta_url }}" class="button button-primary">{{ $ad->cta_label ?: 'Learn more' }}</a>
+                                    @endif
+                                </div>
+                            </div>
+                        </article>
+                    @endforeach
+                </div>
+            @endif
+
+            @if ($featuredLecturers->isNotEmpty())
                 <article class="lecturer-spotlight panel">
-                    <p class="eyebrow">Featured lecturer</p>
-                    <a href="{{ route('lecturers.show', $featuredLecturer) }}" class="lecturer-card-link">
-                        <div class="lecturer-identity">
-                            <img
-                                src="{{ $featuredLecturer->profile_photo_url }}"
-                                alt="{{ $featuredLecturer->name }}"
-                                class="lecturer-avatar"
-                            >
-                            <div>
-                                <h2>{{ $featuredLecturer->name }}</h2>
-                                <p class="lecturer-headline">
-                                    {{ $featuredLecturer->lecturer_headline ?: 'Guiding students through practical coding foundations.' }}
-                                </p>
-                            </div>
+                    <div class="section-heading">
+                        <div>
+                            <p class="eyebrow">Featured lecturers</p>
+                            <h2>Meet the people guiding the work</h2>
                         </div>
-                    </a>
+                    </div>
 
-                    @if ($featuredLecturer->lecturer_bio)
-                        <div class="lecturer-bio">{!! nl2br(e($featuredLecturer->lecturer_bio)) !!}</div>
-                    @endif
+                    <div class="lecturer-card-grid">
+                        @foreach ($featuredLecturers as $lecturer)
+                            <a href="{{ route('lecturers.show', $lecturer) }}" class="lecturer-card-link lecturer-feature-card">
+                                <div class="lecturer-identity">
+                                    <img
+                                        src="{{ $lecturer->profile_photo_url }}"
+                                        alt="{{ $lecturer->name }}"
+                                        class="lecturer-avatar"
+                                    >
+                                    <div>
+                                        <h3>{{ $lecturer->name }}</h3>
+                                        <p class="lecturer-headline">
+                                            {{ $lecturer->lecturer_headline ?: 'Guiding students through practical coding foundations.' }}
+                                        </p>
+                                    </div>
+                                </div>
 
-                    @if ($featuredLecturer->lecturerSpecialtiesList())
-                        <div class="course-meta">
-                            @foreach ($featuredLecturer->lecturerSpecialtiesList() as $specialty)
-                                <span class="pill">{{ $specialty }}</span>
-                            @endforeach
-                        </div>
-                    @endif
+                                @if ($lecturer->lecturer_bio)
+                                    <p class="lecturer-bio">{{ \Illuminate\Support\Str::limit($lecturer->lecturer_bio, 120) }}</p>
+                                @endif
 
-                    <div class="lecturer-course-preview">
-                        <div class="section-heading">
-                            <div>
-                                <p class="eyebrow">Courses by this lecturer</p>
-                                <h3>{{ $featuredLecturer->published_courses_count }} published course{{ $featuredLecturer->published_courses_count === 1 ? '' : 's' }}</h3>
-                            </div>
-                            <a href="{{ route('lecturers.show', $featuredLecturer) }}" class="auth-link">View full profile</a>
-                        </div>
-
-                        <div class="lecturer-course-list">
-                            @forelse ($featuredLecturer->taughtCourses->take(3) as $course)
-                                <a href="{{ route('courses.show', $course->slug) }}" class="lecturer-course-item">
-                                    <strong>{{ $course->title }}</strong>
-                                    <span>{{ $course->category }} � {{ $course->difficulty_level->value }}</span>
-                                </a>
-                            @empty
-                                <p class="muted">This lecturer profile is ready. Their published courses will appear here once added.</p>
-                            @endforelse
-                        </div>
+                                @if ($lecturer->lecturerSpecialtiesList())
+                                    <div class="course-meta">
+                                        @foreach (array_slice($lecturer->lecturerSpecialtiesList(), 0, 3) as $specialty)
+                                            <span class="pill">{{ $specialty }}</span>
+                                        @endforeach
+                                    </div>
+                                @endif
+                            </a>
+                        @endforeach
                     </div>
                 </article>
             @else

@@ -45,6 +45,7 @@ class LecturerPanelProvider extends PanelProvider
             ->discoverResources(in: base_path('packages/Courses/src/Presentation/Filament/Resources'), for: 'CodeGarage\\Courses\\Presentation\\Filament\\Resources')
             ->discoverResources(in: base_path('packages/Lessons/src/Presentation/Filament/Resources'), for: 'CodeGarage\\Lessons\\Presentation\\Filament\\Resources')
             ->discoverResources(in: base_path('packages/Assignments/src/Presentation/Filament/Resources'), for: 'CodeGarage\\Assignments\\Presentation\\Filament\\Resources')
+            ->discoverResources(in: base_path('packages/Posts/src/Presentation/Filament/Resources'), for: 'CodeGarage\\Posts\\Presentation\\Filament\\Resources')
             ->discoverResources(in: base_path('packages/Queries/src/Presentation/Filament/Resources'), for: 'CodeGarage\\Queries\\Presentation\\Filament\\Resources')
             ->discoverResources(in: base_path('packages/Events/src/Presentation/Filament/Resources'), for: 'CodeGarage\\Events\\Presentation\\Filament\\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')

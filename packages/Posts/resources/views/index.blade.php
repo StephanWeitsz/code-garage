@@ -11,8 +11,8 @@
 
         @if ($canCreateAnnouncement)
             <article class="panel stack">
-                <h2>Create announcement or discussion</h2>
-                <form method="POST" action="{{ route('posts.store') }}" class="stack">
+                <h2>Create announcement, discussion, or ad</h2>
+                <form method="POST" action="{{ route('posts.store') }}" class="stack" enctype="multipart/form-data" data-post-form>
                     @csrf
                     <div>
                         <label for="lesson_id">Lesson</label>
@@ -22,7 +22,7 @@
                                 <option value="{{ $lessonId }}">{{ $label }}</option>
                             @endforeach
                         </select>
-                        <p class="muted">Discussions require a lesson. Announcements can target all users or a specific lesson.</p>
+                        <p class="muted">Discussions require a lesson. Announcements and ads can target all users or a specific lesson.</p>
                     </div>
                     <div>
                         <label for="title">Title</label>
@@ -34,10 +34,45 @@
                     </div>
                     <div>
                         <label for="type">Type</label>
-                        <select id="type" name="type" class="auth-input">
+                        <select id="type" name="type" class="auth-input" data-post-type>
                             <option value="discussion">Discussion</option>
                             <option value="announcement">Announcement</option>
+                            <option value="ad">Ad</option>
                         </select>
+                    </div>
+                    <div class="grid-two ad-fields-hidden" data-ad-fields>
+                        <div>
+                            <label for="image">Ad image</label>
+                            <input id="image" name="image" type="file" accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp" class="auth-input">
+                            <p class="muted">JPG, PNG, and WebP images are supported.</p>
+                        </div>
+                        <div>
+                            <label for="is_active">Ad status</label>
+                            <select id="is_active" name="is_active" class="auth-input">
+                                <option value="1">Active</option>
+                                <option value="0">Inactive</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="grid-two ad-fields-hidden" data-ad-fields>
+                        <div>
+                            <label for="starts_at">Ad start date</label>
+                            <input id="starts_at" name="starts_at" type="datetime-local" class="auth-input">
+                        </div>
+                        <div>
+                            <label for="ends_at">Ad end date</label>
+                            <input id="ends_at" name="ends_at" type="datetime-local" class="auth-input">
+                        </div>
+                    </div>
+                    <div class="grid-two ad-fields-hidden" data-ad-fields>
+                        <div>
+                            <label for="cta_label">CTA label</label>
+                            <input id="cta_label" name="cta_label" type="text" class="auth-input" placeholder="Learn more">
+                        </div>
+                        <div>
+                            <label for="cta_url">CTA URL</label>
+                            <input id="cta_url" name="cta_url" type="url" class="auth-input" placeholder="https://...">
+                        </div>
                     </div>
                     <button type="submit" class="button button-primary">Publish post</button>
                 </form>
@@ -74,6 +109,7 @@
                 <a href="{{ route('posts.index', array_filter(['lesson_id' => $selectedLessonId])) }}" class="button {{ $selectedType === '' ? 'button-primary' : 'button-secondary' }}">All</a>
                 <a href="{{ route('posts.index', array_filter(['type' => 'announcement', 'lesson_id' => $selectedLessonId])) }}" class="button {{ $selectedType === 'announcement' ? 'button-primary' : 'button-secondary' }}">Announcements</a>
                 <a href="{{ route('posts.index', array_filter(['type' => 'discussion', 'lesson_id' => $selectedLessonId])) }}" class="button {{ $selectedType === 'discussion' ? 'button-primary' : 'button-secondary' }}">Discussions</a>
+                <a href="{{ route('posts.index', array_filter(['type' => 'ad', 'lesson_id' => $selectedLessonId])) }}" class="button {{ $selectedType === 'ad' ? 'button-primary' : 'button-secondary' }}">Ads</a>
                 <a href="{{ route('posts.index', array_filter(['type' => 'absence_notice', 'lesson_id' => $selectedLessonId])) }}" class="button {{ $selectedType === 'absence_notice' ? 'button-primary' : 'button-secondary' }}">Absence Notices</a>
             </div>
 
@@ -100,12 +136,20 @@
         <div class="card-list">
             @forelse ($posts as $post)
                 <article class="course-card">
+                    @if ($post->imageUrl())
+                        <img src="{{ $post->imageUrl() }}" alt="{{ $post->title }}" class="{{ $post->isAd() ? 'ad-inline-image' : 'post-card-image' }}">
+                    @endif
                     <span class="pill">{{ str($post->type)->replace('_', ' ')->title() }}</span>
                     <strong>{{ $post->title }}</strong>
                     <p class="muted">Status: {{ str($post->status)->replace('_', ' ')->title() }}</p>
                     <p>{{ $post->course?->title ?? 'All courses' }} • {{ $post->lesson?->title ?? 'All users' }} • by {{ $post->author->name }}</p>
                     <p>{{ \Illuminate\Support\Str::limit($post->body, 120) }}</p>
-                    <a href="{{ route('posts.show', $post->id) }}" class="button button-secondary">Open thread</a>
+                    <div class="hero-actions">
+                        <a href="{{ route('posts.show', $post->id) }}" class="button button-secondary">{{ $post->isAd() ? 'View ad' : 'Open thread' }}</a>
+                        @if ($post->isAd() && $post->cta_url)
+                            <a href="{{ $post->cta_url }}" class="button button-primary">{{ $post->cta_label ?: 'Learn more' }}</a>
+                        @endif
+                    </div>
                 </article>
             @empty
                 <p class="muted">No posts yet.</p>
@@ -114,4 +158,22 @@
 
         {{ $posts->links() }}
     </section>
+
+    <script>
+        document.querySelectorAll('[data-post-form]').forEach((form) => {
+            const typeSelect = form.querySelector('[data-post-type]');
+            const adFields = form.querySelectorAll('[data-ad-fields]');
+
+            const syncAdFields = () => {
+                const isAd = typeSelect.value === 'ad';
+
+                adFields.forEach((fieldGroup) => {
+                    fieldGroup.classList.toggle('ad-fields-hidden', ! isAd);
+                });
+            };
+
+            typeSelect.addEventListener('change', syncAdFields);
+            syncAdFields();
+        });
+    </script>
 @endsection

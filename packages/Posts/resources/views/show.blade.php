@@ -3,7 +3,7 @@
 @section('content')
     <section class="stack">
         <div class="hero-actions">
-            <a href="{{ route('posts.index') }}" class="button button-secondary">Back to posts</a>
+            <a href="{{ $isPublicAd ?? false ? route('welcome') : route('posts.index') }}" class="button button-secondary">Back</a>
         </div>
 
         <article class="panel stack">
@@ -14,6 +14,10 @@
                 Posted by {{ $post->author->name }} {{ $post->created_at->diffForHumans() }}
             </p>
             <p class="muted">Status: {{ str($post->status)->replace('_', ' ')->title() }}</p>
+
+            @if ($post->imageUrl())
+                <img src="{{ $post->imageUrl() }}" alt="{{ $post->title }}" class="{{ $post->isAd() ? 'ad-detail-image' : 'post-hero-image' }}">
+            @endif
 
             @if ($canManageLifecycle)
                 <div class="hero-actions">
@@ -35,8 +39,15 @@
                 </div>
             @endif
             <div class="course-description">{!! nl2br(e($post->body)) !!}</div>
+
+            @if ($post->isAd() && $post->cta_url)
+                <div class="hero-actions">
+                    <a href="{{ $post->cta_url }}" class="button button-primary">{{ $post->cta_label ?: 'Learn more' }}</a>
+                </div>
+            @endif
         </article>
 
+        @unless ($post->isAd())
         <article class="panel stack">
             <h2>Replies</h2>
             @if ($isReplyLocked)
@@ -62,5 +73,6 @@
                 <p class="muted">No replies yet. Start the conversation.</p>
             @endforelse
         </article>
+        @endunless
     </section>
 @endsection

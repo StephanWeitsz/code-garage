@@ -3,6 +3,8 @@
 use Illuminate\Support\Facades\Route;
 use CodeGarage\Posts\Presentation\Http\Controllers\PostController;
 
+Route::get('/ads/{post}', [PostController::class, 'publicAd'])->name('public-ad');
+
 Route::middleware(['auth'])->group(function () {
     Route::get('/posts', [PostController::class, 'index'])->name('index');
     Route::get('/posts/{post}', [PostController::class, 'show'])->name('show');
