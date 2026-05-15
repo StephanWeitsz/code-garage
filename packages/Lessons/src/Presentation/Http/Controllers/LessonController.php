@@ -41,6 +41,7 @@ class LessonController extends Controller
         $isEnrolled = $user ? $enrollments->isEnrolled($user->id, $course->id) : false;
         $canManage = $user?->hasAnyRole(['admin', 'lecturer']) ?? false;
         $isLecturer = $user?->hasRole('lecturer') ?? false;
+        $isStudentPreview = $canManage && request()->boolean('preview_as_student');
         $isCompleted = $user ? $enrollments->isLessonCompleted($user->id, $lesson->id) : false;
         $blockingAssignments = $user
             ? $assignments->blockingAssignmentsForLessonAndStudent($lesson->id, $user->id)
@@ -73,7 +74,7 @@ class LessonController extends Controller
 
         $renderedContent = $lesson->content;
         if ($lesson->content_type->value === 'markdown') {
-            $markdown = $this->filterInstructorMarkdownBlocks($lesson->content, $isLecturer);
+            $markdown = $this->filterInstructorMarkdownBlocks($lesson->content, $isLecturer && ! $isStudentPreview);
             $renderedContent = (string) Str::markdown($markdown, [
                 'html_input' => 'strip',
                 'allow_unsafe_links' => false,
@@ -90,8 +91,9 @@ class LessonController extends Controller
             'blockingAssignments' => $blockingAssignments,
             'completedLessonIds' => $completedLessonIds,
             'renderedContent' => $renderedContent,
-            'assignments' => $assignments->forLessonForStudent($lesson->id, $user?->id, $canManage),
-            'lessonPosts' => $posts->forLesson($lesson->id, $user?->id, $canManage),
+            'assignments' => $assignments->forLessonForStudent($lesson->id, $user?->id, $canManage && ! $isStudentPreview),
+            'lessonPosts' => $posts->forLesson($lesson->id, $user?->id, $canManage && ! $isStudentPreview),
+            'isStudentPreview' => $isStudentPreview,
         ]);
     }
 

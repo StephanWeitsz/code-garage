@@ -941,14 +941,14 @@ analogWrite() varies the voltage effectively changing motor speed.
 ### Homework
 Create a "dimmer" switch for your motor using a potentiometer to control speed from stop to full throttle.
 
-Lesson 25: The H-Bridge (L293D)
+## Lesson 25: The H-Bridge (L293D)
 Key Concepts:
 
 Controlling motor direction (forward/reverse), not just speed.
 How an H-Bridge circuit works.
 Using the L293D chip to drive two DC motors.
 Defining multiple control pins to manage state (Forward/Reverse/Stop).
-cpp
+```cpp
 int enA = 9;   // Speed control
 int in1 = 8;   // Dir control
 int in2 = 7;   // Dir control
@@ -972,25 +972,25 @@ void loop() {
   analogWrite(enA, 200);
   delay(2000);
 }
+```
+
 Line-by-Line Explanation:
 
 in1 and in2 determine rotation direction (one must be HIGH, one LOW).
 enA controls the motor speed via PWM.
 L293D allows changing the polarity across the motor terminals.
-Homework: Build a system where a button toggle reverses the direction of the DC motor.
 
-📼 Paul McWhorter Arduino Uno R3 Tutorial Series – Lessons 26–30
+### Homework
+Build a system where a button toggle reverses the direction of the DC motor.
 
-Continuing the detailed breakdowns. Each includes core concepts, exact code from the lessons, line-by-line explanation, and homework. Add these to your growing Markdown reference file (Arduino_R3_Full_Breakdown.md).
-
-Lesson 26: Using an LCD Display (16x2)
+## Lesson 26: Using an LCD Display (16x2)
 Key Concepts:
 
 Interfacing a 16x2 LCD using the LiquidCrystal library.
 Pin connections (RS, EN, D4–D7).
 Displaying static text and clearing the screen.
 Basic cursor control with setCursor().
-cpp
+```cpp
 #include <LiquidCrystal.h>
 
 LiquidCrystal lcd(12, 11, 5, 4, 3, 2);  // RS, EN, D4, D5, D6, D7
@@ -1005,23 +1005,27 @@ void loop() {
   lcd.print(millis() / 1000);           // Show seconds since start
   lcd.print(" seconds");
 }
+```
+
 Line-by-Line Explanation:
 
-#include <LiquidCrystal.h> loads the library for easy LCD control.
+`#include <LiquidCrystal.h>` loads the library for easy LCD control.
 LiquidCrystal lcd(...) defines the pin connections.
 lcd.begin(16,2) initializes the display size.
 lcd.print() writes text; setCursor(col,row) positions the cursor.
 The loop updates a running timer on the bottom row without clearing the top.
-Homework: Display a custom message on the first row and a live counter on the second.
 
-Lesson 27: Scrolling Text on LCD
+### Homework
+Display a custom message on the first row and a live counter on the second.
+
+## Lesson 27: Scrolling Text on LCD
 Key Concepts:
 
 Using scrollDisplayLeft() and scrollDisplayRight() for moving text.
 Creating long messages that exceed the 16-character width.
 Timing delays to control scroll speed.
 Combining static and scrolling elements.
-cpp
+```cpp
 #include <LiquidCrystal.h>
 
 LiquidCrystal lcd(12, 11, 5, 4, 3, 2);
@@ -1041,20 +1045,25 @@ void loop() {
     delay(300);
   }
 }
+```
+
 Line-by-Line Explanation:
 
 The long initial string is wider than the screen, so scrolling reveals the rest.
 Two separate for loops create a back-and-forth marquee effect.
 delay(300) sets a readable scroll speed.
-Homework: Make the top row static ("Temperature:") and scroll a changing sensor value on the bottom row.
 
-Lesson 28: Custom Characters on LCD
+### Homework
+Make the top row static ("Temperature:") and scroll a changing sensor value on the bottom row.
+
+## Lesson 28: Custom Characters on LCD
 Key Concepts:
 
 Creating up to 8 custom 5x8 pixel characters with createChar().
 Using byte arrays to define pixel patterns.
 Displaying custom symbols like hearts, smileys, or bar graphs.
-cpp
+
+```cpp
 #include <LiquidCrystal.h>
 
 LiquidCrystal lcd(12, 11, 5, 4, 3, 2);
@@ -1079,21 +1088,26 @@ void setup() {
 }
 
 void loop() {}
+```
+
 Line-by-Line Explanation:
 
 Each B00000 line represents one row of 5 pixels (1 = on).
 lcd.createChar(0, heart) loads the pattern into slot 0.
 lcd.write(byte(0)) prints the custom character.
-Homework: Create a custom "smiley face" and a "battery" icon, then display both on the LCD.
+### Homework
+Create a custom "smiley face" and a "battery" icon, then display both on the LCD.
 
-Lesson 29: Reading Temperature with LM35 Sensor
+## Lesson 29: Reading Temperature with LM35 Sensor
+
 Key Concepts:
 
 Using the LM35 analog temperature sensor (10mV per °C).
 Converting analogRead values to Celsius and Fahrenheit.
 Displaying live temperature on Serial Monitor and/or LCD.
 Basic calibration and averaging multiple readings for stability.
-cpp
+
+```cpp
 int sensorPin = A0;
 float temperatureC = 0;
 
@@ -1110,12 +1124,16 @@ void loop() {
   Serial.println(" °C");
   delay(1000);
 }
+```
+
 Line-by-Line Explanation:
 
 analogRead() gives 0–1023; multiplied by 5.0/1024.0 yields voltage.
 For LM35, multiply voltage by 100 to get °C directly.
 The loop reads and prints every second.
-Homework: Combine this with the LCD from Lesson 26 to show live temperature on the display.
+
+### Homework
+Combine this with the LCD from Lesson 26 to show live temperature on the display.
 
 Lesson 30: Using a DHT11 Temperature & Humidity Sensor
 Key Concepts:

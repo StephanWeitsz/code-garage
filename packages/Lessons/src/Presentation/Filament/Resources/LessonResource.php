@@ -13,6 +13,7 @@ use Filament\Tables\Enums\FiltersLayout;
 use Filament\Tables\Filters\Filter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\HtmlString;
 use CodeGarage\Courses\Infrastructure\Persistence\Eloquent\Models\Course;
 use CodeGarage\Lessons\Infrastructure\Persistence\Eloquent\Models\CourseSection;
 use CodeGarage\Lessons\Infrastructure\Persistence\Eloquent\Models\Lesson;
@@ -29,6 +30,33 @@ class LessonResource extends Resource
     {
         return $form
             ->schema([
+                /*
+                Forms\Components\Section::make('Student preview')
+                    ->schema([
+                        Forms\Components\Placeholder::make('student_preview_link')
+                            ->hiddenLabel()
+                            ->content(function (?Lesson $record): HtmlString {
+                                if (! $record) {
+                                    return new HtmlString('<span class="text-sm text-gray-500">Save the lesson before opening the student preview.</span>');
+                                }
+
+                                $record->loadMissing('course');
+
+                                $url = route('lessons.show', [
+                                    $record->course->slug,
+                                    $record->slug,
+                                    'preview_as_student' => 1,
+                                ]);
+
+                                
+                                return new HtmlString(sprintf(
+                                    '<a href="%s" target="_blank" rel="noopener noreferrer" class="fi-btn fi-btn-size-md inline-flex items-center gap-1.5 rounded-lg bg-primary-600 px-3 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-primary-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600">View lesson as student</a>',
+                                    e($url),
+                                ));
+                                
+                            }),
+                    ]),
+                */    
                 Forms\Components\Select::make('course_id')
                     ->label('Course')
                     ->options(fn () => static::courseOptions())
@@ -155,6 +183,15 @@ class LessonResource extends Resource
             ->filtersFormColumns(1)
             ->persistFiltersInSession()
             ->actions([
+                Tables\Actions\Action::make('studentPreview')
+                    ->label('Student preview')
+                    ->icon('heroicon-o-eye')
+                    ->url(fn (Lesson $record): string => route('lessons.show', [
+                        $record->course->slug,
+                        $record->slug,
+                        'preview_as_student' => 1,
+                    ]))
+                    ->openUrlInNewTab(),
                 Tables\Actions\ViewAction::make()
                     ->url(fn (Lesson $record): string => static::getUrl('view', [
                         'record' => $record,

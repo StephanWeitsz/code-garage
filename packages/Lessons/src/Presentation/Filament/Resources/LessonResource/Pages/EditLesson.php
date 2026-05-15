@@ -13,6 +13,15 @@ class EditLesson extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
+            Actions\Action::make('studentPreview')
+                ->label('Student preview')
+                ->icon('heroicon-o-eye')
+                ->url(fn (): string => route('lessons.show', [
+                    $this->record->course->slug,
+                    $this->record->slug,
+                    'preview_as_student' => 1,
+                ]))
+                ->openUrlInNewTab(),
             Actions\ViewAction::make(),
             Actions\DeleteAction::make(),
         ];

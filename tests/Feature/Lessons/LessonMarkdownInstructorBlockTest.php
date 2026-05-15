@@ -77,5 +77,13 @@ class LessonMarkdownInstructorBlockTest extends TestCase
             ->assertSeeText('Public intro text.')
             ->assertSeeText('Public wrap-up text.')
             ->assertSeeText('Lecturer-only hint.');
+
+        $this->actingAs($lecturer)
+            ->get("/courses/{$course->slug}/lessons/{$lesson->slug}?preview_as_student=1")
+            ->assertOk()
+            ->assertSeeText('Student preview')
+            ->assertSeeText('Public intro text.')
+            ->assertSeeText('Public wrap-up text.')
+            ->assertDontSeeText('Lecturer-only hint.');
     }
 }

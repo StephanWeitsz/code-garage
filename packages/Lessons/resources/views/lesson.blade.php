@@ -11,6 +11,9 @@
             <div>
                 <p class="eyebrow">{{ $course->title }}</p>
                 <h1>{{ $lesson->title }}</h1>
+                @if ($isStudentPreview ?? false)
+                    <p class="pill">Student preview</p>
+                @endif
                 @if ($lesson->section)
                     <p class="muted">Section {{ $lesson->section->sequence }} - {{ $lesson->section->title }}</p>
                 @endif
