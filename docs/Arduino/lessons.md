@@ -1135,14 +1135,16 @@ The loop reads and prints every second.
 ### Homework
 Combine this with the LCD from Lesson 26 to show live temperature on the display.
 
-Lesson 30: Using a DHT11 Temperature & Humidity Sensor
+## Lesson 30: Using a DHT11 Temperature & Humidity Sensor
+
 Key Concepts:
 
 Installing and using the DHT library for digital sensors.
 Reading both temperature and relative humidity.
 Handling the one-wire digital protocol.
 Error checking with DHT.read().
-cpp
+
+```cpp
 #include <DHT.h>
 
 #define DHTPIN 2
@@ -1171,26 +1173,28 @@ void loop() {
   Serial.println(" °C");
   delay(2000);
 }
+```
+
 Line-by-Line Explanation:
 
 #define sets the pin and sensor type (DHT11 or DHT22).
-dht.begin() initializes communication.
-readHumidity() and readTemperature() return float values.
-isnan() checks for invalid readings (common with cheap sensors).
-Homework: Display both humidity and temperature on a 16x2 LCD, updating every 2 seconds.
+`dht.begin()` initializes communication.
+`readHumidity()` and `readTemperature()` return float values.
+`isnan()` checks for invalid readings (common with cheap sensors).
 
-📼 Paul McWhorter Arduino Uno R3 Tutorial Series – Lessons 31–35
+### Homework
+Display both humidity and temperature on a 16x2 LCD, updating every 2 seconds.
 
-Here is the continuation of your complete reference. Each lesson includes the core concepts, demonstrated code, line-by-line explanation, and homework. Add these to your growing Markdown file.
+## Lesson 31: SD Card Reader/Writer
 
-Lesson 31: SD Card Reader/Writer
 Key Concepts:
 
 Reading and writing data to a microSD card using the SD library.
 Storing sensor data or logging over time.
 File creation, writing, appending, and reading.
 SPI communication for the SD module.
-cpp
+
+```cpp
 #include <SD.h>
 #include <SPI.h>
 
@@ -1216,22 +1220,27 @@ void setup() {
 }
 
 void loop() {}
+```
+
 Line-by-Line Explanation:
 
-SD.begin(chipSelect) initializes the SD card on the specified pin.
-SD.open(filename, FILE_WRITE) opens (or creates) a file.
-println() writes a line of text; close() saves and releases the file.
+`SD.begin(chipSelect)` initializes the SD card on the specified pin.
+`SD.open(filename, FILE_WRITE)` opens (or creates) a file.
+`println()` writes a line of text; close() saves and releases the file.
 Always check if the file opened successfully to avoid errors.
-Homework: Log temperature or distance sensor readings every 10 seconds to a CSV file on the SD card.
 
-Lesson 32: IR Remote Control
+### Homework: Log temperature or distance sensor readings every 10 seconds to a CSV file on the SD card.
+
+## Lesson 32: IR Remote Control
+
 Key Concepts:
 
 Receiving and decoding signals from an infrared remote.
 Using the IRremote library.
 Mapping button presses to specific actions (e.g., turn on LED, change servo position).
 Learning HEX codes for each remote button.
-cpp
+
+```cpp
 #include <IRremote.h>
 
 int RECV_PIN = 11;
@@ -1249,22 +1258,28 @@ void loop() {
     irrecv.resume();  // Receive the next value
   }
 }
+```
+
 Line-by-Line Explanation:
 
 IRrecv irrecv(RECV_PIN) creates the receiver object on the specified pin.
-enableIRIn() starts listening for IR signals.
+`enableIRIn()` starts listening for IR signals.
 decode(&results) checks for a received signal; results.value gives the HEX code.
-resume() prepares for the next button press.
-Homework: Use specific button codes to control an LED or servo (e.g., power button toggles an LED).
+`resume()` prepares for the next button press.
 
-Lesson 33: Stepper Motors (Part 1)
+### Homework
+Use specific button codes to control an LED or servo (e.g., power button toggles an LED).
+
+# Lesson 33: Stepper Motors (Part 1)
+
 Key Concepts:
 
 Controlling a stepper motor for precise angular movement.
 Using the built-in Stepper library.
 Understanding steps per revolution and speed control.
 Basic forward and backward rotation.
-cpp
+
+```cpp
 #include <Stepper.h>
 
 const int stepsPerRevolution = 2048;  // For 28BYJ-48 with ULN2003
@@ -1280,21 +1295,27 @@ void loop() {
   myStepper.step(-stepsPerRevolution);   // One full revolution backward
   delay(1000);
 }
+```
+
 Line-by-Line Explanation:
 
 Stepper(steps, pin1, pin2, pin3, pin4) defines the motor and its control pins.
-setSpeed(RPM) sets rotation speed.
-Positive step() moves clockwise; negative moves counterclockwise.
-Homework: Make the stepper motor rotate to specific angles (e.g., 90°, 180°) using calculated steps.
+`setSpeed(RPM)` sets rotation speed.
+Positive `step()` moves clockwise; negative moves counterclockwise.
 
-Lesson 34: Stepper Motors (Part 2) – Using a Driver
+### Homework
+Make the stepper motor rotate to specific angles (e.g., 90°, 180°) using calculated steps.
+
+# Lesson 34: Stepper Motors (Part 2) – Using a Driver
+
 Key Concepts:
 
 Driving higher-current stepper motors with a driver board (e.g., A4988 or DRV8825).
 Using STEP and DIR pins for simpler control.
 Microstepping for smoother, quieter motion.
 Avoiding the limitations of the basic Stepper library.
-cpp
+
+```cpp
 #define STEP_PIN 2
 #define DIR_PIN 3
 int steps = 200;  // Steps per revolution (adjust for microstepping)
@@ -1314,21 +1335,27 @@ void loop() {
   }
   delay(1000);
 }
+```
+
 Line-by-Line Explanation:
 
 DIR_PIN sets rotation direction (HIGH/LOW).
 Each pulse on STEP_PIN advances the motor one step.
 Delay between pulses controls speed (shorter = faster).
-Homework: Add a potentiometer to control speed and a button to change direction.
 
-Lesson 35: Using the AccelStepper Library
+### Homework
+Add a potentiometer to control speed and a button to change direction.
+
+# Lesson 35: Using the AccelStepper Library
+
 Key Concepts:
 
 Non-blocking stepper control with acceleration and deceleration.
 Installing and using the AccelStepper library.
 Smooth starts/stops for realistic motion.
 Running multiple motors simultaneously.
-cpp
+
+```cpp
 #include <AccelStepper.h>
 
 AccelStepper stepper(AccelStepper::DRIVER, 2, 3);  // STEP, DIR pins
@@ -1345,25 +1372,27 @@ void loop() {
   }
   stepper.run();  // Must call this frequently
 }
+```
+
 Line-by-Line Explanation:
 
 AccelStepper::DRIVER mode uses STEP/DIR pins (common with driver boards).
-setMaxSpeed() and setAcceleration() create smooth motion profiles.
-run() must be called often in loop() to update the motor.
-Homework: Control two stepper motors at once with different speeds and acceleration profiles.
+`setMaxSpeed()` and `setAcceleration()` create smooth motion profiles.
+`run()` must be called often in loop() to update the motor.
 
-📼 Paul McWhorter Arduino Uno R3 Tutorial Series – Lessons 36–40
+### Homework
+Control two stepper motors at once with different speeds and acceleration profiles.
 
-Here is the next batch for your complete reference. Each lesson includes core concepts, demonstrated code, line-by-line explanation, and homework.
+## Lesson 36: Using the EEPROM Library
 
-Lesson 36: Using the EEPROM Library
 Key Concepts:
 
 Storing data permanently even after power is removed (non-volatile memory).
 Reading and writing bytes, integers, or floats with the built-in EEPROM library.
 Understanding memory limits (typically 1KB on Uno).
 Practical uses like saving calibration values or high scores.
-cpp
+
+```cpp
 #include <EEPROM.h>
 
 int address = 0;
@@ -1379,20 +1408,26 @@ void setup() {
 }
 
 void loop() {}
+```
+
 Line-by-Line Explanation:
 
 EEPROM.write(address, value) stores a single byte at the given address.
 EEPROM.read(address) retrieves the byte.
 Data survives resets and power cycles. For larger values use EEPROM.put() and EEPROM.get() (shown in later lessons).
-Homework: Save a sensor calibration value to EEPROM and load it automatically on startup.
 
-Lesson 37: Reading and Writing Larger Data with EEPROM.put() and .get()
+### Homework
+Save a sensor calibration value to EEPROM and load it automatically on startup.
+
+## Lesson 37: Reading and Writing Larger Data with EEPROM.put() and .get()
+
 Key Concepts:
 
-Using .put() and .get() to store multi-byte data types (ints, floats, structs).
+Using `.put()` and `.get()` to store multi-byte data types (ints, floats, structs).
 Automatic address calculation to avoid overwriting.
 Updating values without unnecessary writes to extend EEPROM life.
-cpp
+
+```cpp
 #include <EEPROM.h>
 
 struct Settings {
@@ -1412,21 +1447,26 @@ void setup() {
 }
 
 void loop() {}
+```
+
 Line-by-Line Explanation:
 
 A struct groups related variables.
-EEPROM.put(address, data) writes any data type safely.
-EEPROM.get(address, variable) reads it back into the variable.
-Homework: Create a settings menu that saves user preferences (brightness, sensitivity) to EEPROM.
+`EEPROM.put(address, data)` writes any data type safely.
+`EEPROM.get(address, variable)` reads it back into the variable.
 
-Lesson 38: Using the Arduino as a Web Server
+### Homework
+Create a settings menu that saves user preferences (brightness, sensitivity) to EEPROM.
+
+## Lesson 38: Using the Arduino as a Web Server
+
 Key Concepts:
 
 Connecting the Arduino to a network using the Ethernet Shield.
 Serving a simple HTML web page.
 Reading analog sensors and displaying live values in a browser.
 Basic HTTP request handling.
-cpp
+```cpp
 #include <SPI.h>
 #include <Ethernet.h>
 
@@ -1451,20 +1491,26 @@ void loop() {
     client.stop();
   }
 }
+```
+
 Line-by-Line Explanation:
 
 Ethernet.begin() configures the network.
-server.available() waits for browser connections.
+`server.available()` waits for browser connections.
 The code sends a minimal HTML response with live sensor data.
-Homework: Add multiple sensor readings and refresh the page automatically with meta tags.
 
-Lesson 39: Controlling Arduino from a Web Browser (Web Client)
+### Homework
+Add multiple sensor readings and refresh the page automatically with meta tags.
+
+## Lesson 39: Controlling Arduino from a Web Browser (Web Client)
+
 Key Concepts:
 
 Sending commands from a web page to the Arduino (e.g., turn LEDs on/off).
 Parsing simple GET requests.
 Creating HTML buttons that trigger Arduino actions.
-cpp
+
+```cpp
 #include <SPI.h>
 #include <Ethernet.h>
 
@@ -1494,21 +1540,27 @@ void loop() {
     client.stop();
   }
 }
+```
+
 Line-by-Line Explanation:
 
 The browser sends a URL with parameters (/LED=ON).
-indexOf() checks the request string for commands.
+`indexOf()` checks the request string for commands.
 Simple links act as buttons to control the hardware.
-Homework: Add more controls (brightness via PWM, servo position) through additional links.
 
-Lesson 40: Introduction to WiFi with ESP8266
+### Homework
+Add more controls (brightness via PWM, servo position) through additional links.
+
+## Lesson 40: Introduction to WiFi with ESP8266
+
 Key Concepts:
 
 Using the ESP8266 WiFi module (or ESP-01) with Arduino.
 Connecting to your home WiFi network.
 Sending data to the Serial Monitor or a web service.
 AT commands or the WiFiEsp library for communication.
-cpp
+
+```cpp
 #include <WiFiEsp.h>
 
 char ssid[] = "YourNetwork";
@@ -1526,25 +1578,27 @@ void setup() {
 }
 
 void loop() {}
+```
+
 Line-by-Line Explanation:
 
-WiFi.init() starts communication with the ESP8266.
-WiFi.begin(ssid, pass) attempts to join the network.
+`WiFi.init()` starts communication with the ESP8266.
+`WiFi.begin(ssid, pass)` attempts to join the network.
 Once connected, you can use the module as a web client or server.
-Homework: Send temperature or sensor data from the Arduino to a free online IoT service like ThingSpeak.
 
-📼 Paul McWhorter Arduino Uno R3 Tutorial Series – Lessons 41–45
+### Homework
+Send temperature or sensor data from the Arduino to a free online IoT service like ThingSpeak.
 
-Here is the next batch for your complete reference. Each lesson includes core concepts, demonstrated code, line-by-line explanation, and homework.
+## Lesson 41: Connecting Arduino to the Internet with ESP8266
 
-Lesson 41: Connecting Arduino to the Internet with ESP8266
 Key Concepts:
 
 Using the ESP8266 as a WiFi module to connect the Arduino to a network.
 Sending sensor data to online services like ThingSpeak.
 Parsing HTTP responses and handling basic error checking.
 Setting up the ESP8266 in station mode.
-cpp
+
+```cpp
 #include <SoftwareSerial.h>
 SoftwareSerial esp8266(2, 3);  // RX, TX pins
 
@@ -1574,22 +1628,28 @@ String sendCommand(String command, int timeout) {
   Serial.print(response);
   return response;
 }
+```
+
 Line-by-Line Explanation:
 
 SoftwareSerial communicates with the ESP8266 on separate pins.
 AT commands configure the module (reset, mode, join WiFi).
 CIPSTART and CIPSEND open a TCP connection to send data to a server.
 The custom sendCommand function waits for responses.
-Homework: Modify the code to send live DHT11 temperature and humidity data to ThingSpeak every 15 seconds.
 
-Lesson 42: Creating a Simple Web Server with ESP8266
+### Homework
+Modify the code to send live DHT11 temperature and humidity data to ThingSpeak every 15 seconds.
+
+## Lesson 42: Creating a Simple Web Server with ESP8266
+
 Key Concepts:
 
 Turning the ESP8266 into an access point or web server.
 Serving HTML pages directly from the Arduino/ESP combination.
 Controlling pins (LEDs, relays) via a browser interface.
 Basic CSS for a cleaner web UI.
-cpp
+
+```cpp
 #include <ESP8266WiFi.h>
 #include <ESP8266WebServer.h>
 
@@ -1615,22 +1675,28 @@ void handleLEDON() {
   digitalWrite(2, HIGH);
   server.send(200, "text/html", "LED is ON!");
 }
+```
+
 Line-by-Line Explanation:
 
-WiFi.softAP() creates a WiFi network.
+`WiFi.softAP()` creates a WiFi network.
 server.on(path, function) registers handlers for different URLs.
-server.send() returns HTML or text to the browser.
-handleClient() must run continuously to process requests.
-Homework: Add buttons to turn the LED off and display live sensor readings on the web page.
+`server.send()` returns HTML or text to the browser.
+`handleClient()` must run continuously to process requests.
 
-Lesson 43: Using MQTT with ESP8266 for IoT
+### Homework
+Add buttons to turn the LED off and display live sensor readings on the web page.
+
+## Lesson 43: Using MQTT with ESP8266 for IoT
+
 Key Concepts:
 
 Implementing the MQTT protocol for lightweight IoT messaging.
 Publishing sensor data and subscribing to control commands.
 Connecting to free brokers like Mosquitto or Adafruit IO.
 Handling callbacks for incoming messages.
-cpp
+
+```cpp
 #include <ESP8266WiFi.h>
 #include <PubSubClient.h>
 
@@ -1659,36 +1725,43 @@ void loop() {
   client.publish("home/temp", "23.5");
   delay(5000);
 }
+```
+
 Line-by-Line Explanation:
 
 PubSubClient library handles MQTT connections.
-callback() processes messages received on subscribed topics.
-publish() sends data; subscribe() listens for commands.
-Homework: Control an LED remotely by publishing "ON" or "OFF" to the subscribed topic from another device.
+`callback()` processes messages received on subscribed topics.
+`publish()` sends data; `subscribe()` listens for commands.
 
-Lesson 44: Introduction to Node-RED for IoT Dashboards
+### Homework
+Control an LED remotely by publishing "ON" or "OFF" to the subscribed topic from another device.
+
+## Lesson 44: Introduction to Node-RED for IoT Dashboards
+
 Key Concepts:
 
 Installing and using Node-RED on a Raspberry Pi or computer.
 Creating visual flows to receive MQTT data from Arduino/ESP.
 Building simple dashboards with charts and gauges.
 Connecting flows to email alerts or database storage.
-cpp
-// No Arduino code for this lesson — focus is on Node-RED flows
-// Example flow nodes: MQTT In → Debug → Dashboard Gauge
+
 Line-by-Line Explanation:
+
 This lesson shifts to the Node-RED visual programming tool. You drag nodes (MQTT input, function, dashboard UI) and wire them together. The Arduino/ESP publishes data via MQTT, and Node-RED displays it in a browser dashboard.
 
-Homework: Create a Node-RED dashboard showing temperature, humidity, and a control button that sends MQTT commands back to your Arduino.
+### Homework
+Create a Node-RED dashboard showing temperature, humidity, and a control button that sends MQTT commands back to your Arduino.
 
-Lesson 45: Final Project – Smart Home IoT System
+## Lesson 45: Final Project – Smart Home IoT System
+
 Key Concepts:
 
 Combining everything learned: sensors, displays, WiFi, MQTT, web interfaces.
 Building a complete system (e.g., temperature monitor with remote control and logging).
 Best practices for reliable IoT projects (error handling, reconnect logic).
 Expanding to multiple nodes.
-cpp
+
+```cpp
 // Composite code example — full project would combine prior lessons
 #include <DHT.h>
 #include <ESP8266WiFi.h>
@@ -1709,20 +1782,24 @@ void loop() {
   client.publish("home/temp", String(t).c_str());
   delay(10000);
 }
+```
+
 Line-by-Line Explanation:
 This lesson integrates DHT reading, WiFi connection, and MQTT publishing into one sketch. Add error checking (reconnect() function), LCD output, and a Node-RED dashboard for a complete smart sensor node.
 
-Homework: Build and document your own final project (e.g., a weather station that logs to SD, displays on LCD, and sends alerts via MQTT).
+### Homework
+Build and document your own final project (e.g., a weather station that logs to SD, displays on LCD, and sends alerts via MQTT).
 
+## Lesson 46: Using Interrupts for Responsive Projects
 
-Lesson 46: Using Interrupts for Responsive Projects
 Key Concepts:
 
 Hardware interrupts to handle time-sensitive events without polling.
 Attaching interrupts to pins for rising/falling edges.
 Debouncing buttons and improving responsiveness in multi-task projects.
 Understanding volatile variables and interrupt service routines (ISRs).
-cpp
+
+```cpp
 volatile int interruptCount = 0;
 int pin = 2;
 
@@ -1741,22 +1818,28 @@ void loop() {
 void isr() {
   interruptCount++;
 }
+```
+
 Line-by-Line Explanation:
 
 volatile ensures the variable is updated correctly across interrupt and main code.
-attachInterrupt() links a pin to a function (ISR) on a specific edge (FALLING).
+`attachInterrupt()` links a pin to a function (ISR) on a specific edge (FALLING).
 The ISR runs immediately on trigger; keep it short to avoid blocking.
-digitalPinToInterrupt() converts pin number for compatibility.
-Homework: Use an interrupt to count button presses accurately while blinking an LED in the main loop.
+`digitalPinToInterrupt()` converts pin number for compatibility.
 
-Lesson 47: Advanced Temperature and Humidity with DHT22
+### Homework
+Use an interrupt to count button presses accurately while blinking an LED in the main loop.
+
+## Lesson 47: Advanced Temperature and Humidity with DHT22
+
 Key Concepts:
 
 Upgrading from DHT11 to DHT22 for better accuracy and range.
 Reading floating-point values and handling checksum errors.
 Comparing sensors and integrating with displays or logging.
 Using the DHT library for simplified code.
-cpp
+
+```cpp
 #include <DHT.h>
 #define DHTPIN 7
 #define DHTTYPE DHT22
@@ -1778,21 +1861,27 @@ void loop() {
   Serial.print("Temperature: "); Serial.print(t); Serial.println(" *C");
   delay(2000);
 }
+```
+
 Line-by-Line Explanation:
 
-DHT() initializes the sensor type and pin.
-readHumidity() and readTemperature() return floats; check for NaN errors.
+`DHT()` initializes the sensor type and pin.
+`readHumidity()` and `readTemperature()` return floats; check for NaN errors.
 Delay prevents too-frequent reads (DHT22 needs ~2 seconds between samples).
-Homework: Log DHT22 readings to an SD card (from Lesson 31) with timestamps.
 
-Lesson 48: Ultrasonic Distance Sensor Enhancements (HC-SR04)
+### Homework
+Log DHT22 readings to an SD card (from Lesson 31) with timestamps.
+
+## Lesson 48: Ultrasonic Distance Sensor Enhancements (HC-SR04)
+
 Key Concepts:
 
 Improving accuracy with temperature compensation and averaging.
-Using pulseIn() for precise timing.
+Using `pulseIn()` for precise timing.
 Creating a simple rangefinder with LED or buzzer feedback.
 Filtering noise for reliable measurements.
-cpp
+
+```cpp
 const int trigPin = 9;
 const int echoPin = 10;
 long duration;
@@ -1813,22 +1902,27 @@ void loop() {
   Serial.print("Distance: "); Serial.print(distance); Serial.println(" cm");
   delay(500);
 }
+```
+
 Line-by-Line Explanation:
 
 Trigger pulse sends ultrasonic burst.
-pulseIn() measures echo return time.
+`pulseIn()` measures echo return time.
 Formula converts time to distance (adjust for temperature if needed).
 Short delay avoids overlapping pulses.
-Homework: Add an LED bar or buzzer that changes based on distance thresholds (e.g., proximity alarm).
 
-Lesson 49: Wireless Communication with NRF24L01 Modules
+### Homework: Add an LED bar or buzzer that changes based on distance thresholds (e.g., proximity alarm).
+
+## Lesson 49: Wireless Communication with NRF24L01 Modules
+
 Key Concepts:
 
 Point-to-point radio communication using NRF24L01 transceivers.
 Sending and receiving data packets between two Arduinos.
 Configuring pipes, power levels, and data rates.
 Building simple wireless sensor networks.
-cpp
+
+```cpp
 #include <SPI.h>
 #include <nRF24L01.h>
 #include <RF24.h>
@@ -1848,22 +1942,27 @@ void loop() {
   radio.write(&text, sizeof(text));
   delay(1000);
 }
+```
 Line-by-Line Explanation:
 
 RF24() sets up the module with control pins.
-openWritingPipe() defines the communication address.
-write() sends data; use a matching receiver sketch on the other Arduino.
+`openWritingPipe()` defines the communication address.
+`write()` sends data; use a matching receiver sketch on the other Arduino.
 Lower PA level for short-range testing.
-Homework: Send temperature data wirelessly from one Arduino to another that displays it on an LCD.
 
-Lesson 50: Final Capstone Project – Wireless Weather Station
+### Homework
+Send temperature data wirelessly from one Arduino to another that displays it on an LCD.
+
+## Lesson 50: Final Capstone Project – Wireless Weather Station
+
 Key Concepts:
 
 Integrating multiple prior lessons into one project (sensors, logging, wireless, display).
 Error handling, power management, and modular code design.
 Expanding to multi-node networks.
 Documenting and troubleshooting a complete system.
-cpp
+
+```cpp
 // Capstone sketch combines DHT22, SD logging, NRF24L01, and LCD
 // (Full code would be 100+ lines; build incrementally from prior lessons)
 #include <DHT.h>
@@ -1878,25 +1977,24 @@ void setup() {
 void loop() {
   // Read sensors, log to SD, transmit wirelessly, update display
 }
+```
+
 Line-by-Line Explanation:
 This lesson ties everything together. Start with separate modules (sensor reading, logging, transmission), then combine in a main sketch with functions for each task. Add reconnect logic for wireless and error checks for SD.
 
-Homework: Build, test, and document your own wireless weather station. Share photos or results in the comments!
+### Homework
+Build, test, and document your own wireless weather station. Share photos or results in the comments!
 
-📼 Paul McWhorter Arduino Series – Lessons 51–55 (Arduino Uno R4 WiFi Focus)
+## Lesson 51: Using the HC-SR04 Ultrasonic Sensor for Echolocation
 
-Your continued request for lessons 51–55 aligns with the updated Arduino Uno R4 WiFi playlist (which builds on the original Uno R3 series). The core Uno R3 series typically ends around lesson 50, so these continue the progression with advanced sensors, wireless features, and IoT integration using the R4's built-in WiFi and LED matrix. I've structured them based on Paul McWhorter's style from the available course materials. Each includes key concepts, code, explanations, and homework. (Note: The provided context image from lesson videos shows typical breadboard/sensor setups.)
-
-Lesson thumbnail example
-
-Lesson 51: Using the HC-SR04 Ultrasonic Sensor for Echolocation
 Key Concepts:
 
 Precise distance measurement using sound wave reflection.
 Integrating with the R4's improved processing for faster reads.
 Temperature compensation for accuracy.
 Applications in robotics or obstacle avoidance.
-cpp
+
+```cpp
 const int trigPin = 9;
 const int echoPin = 10;
 long duration;
@@ -1917,19 +2015,24 @@ void loop() {
   Serial.print("Distance: "); Serial.print(distance); Serial.println(" cm");
   delay(500);
 }
+```
+
 Line-by-Line Explanation:
 The trigger sends a 10μs pulse; pulseIn() measures the echo time. The formula uses the speed of sound (adjusted slightly for typical room temp). Output to Serial for monitoring.
 
-Homework: Add an LED that blinks faster as distance decreases (proximity alert).
+### Homework
+Add an LED that blinks faster as distance decreases (proximity alert).
 
-Lesson 52: Integrating PIR Motion Sensors with the Arduino Uno R4
+## Lesson 52: Integrating PIR Motion Sensors with the Arduino Uno R4
+
 Key Concepts:
 
 Detecting infrared changes for motion (warm bodies).
 Reducing false triggers with sensitivity adjustments.
 Combining with WiFi to send alerts.
 Ideal for security or automation projects.
-cpp
+
+```cpp
 int pirPin = 2;
 int ledPin = 13;
 int pirState = LOW;
@@ -1957,19 +2060,23 @@ void loop() {
   }
   delay(100);
 }
+```
+
 Line-by-Line Explanation:
-digitalRead() checks the PIR output. State tracking prevents repeated messages. LED activates on detection; extend with WiFi for remote notifications.
 
-Homework: Log motion events with timestamps to an SD card or cloud via WiFi.
+`digitalRead()` checks the PIR output. State tracking prevents repeated messages. LED activates on detection; extend with WiFi for remote notifications.
 
-Lesson 53: Advanced Arrays and Data Handling on the R4
+### Homework: Log motion events with timestamps to an SD card or cloud via WiFi.
+
+## Lesson 53: Advanced Arrays and Data Handling on the R4
 Key Concepts:
 
 Using arrays for storing multiple sensor readings.
 Dynamic data processing on the R4's faster MCU.
 Averaging/filtering for smoother results.
 Preparing data for wireless transmission.
-cpp
+
+```cpp
 int readings[10];
 int index = 0;
 int total = 0;
@@ -1988,19 +2095,26 @@ void loop() {
   Serial.print("Average: "); Serial.println(average);
   delay(200);
 }
+```
+
 Line-by-Line Explanation:
+
 A circular buffer stores the last 10 readings. Subtract old value, add new, then compute average. This smooths noisy analog inputs efficiently.
 
-Homework: Use an array to store and display multiple ultrasonic distances on the R4's built-in LED matrix.
 
-Lesson 54: Basic WiFi Setup and Client Connections on Uno R4
+### Homework
+Use an array to store and display multiple ultrasonic distances on the R4's built-in LED matrix.
+
+## Lesson 54: Basic WiFi Setup and Client Connections on Uno R4
+
 Key Concepts:
 
 Leveraging the R4's onboard WiFi module.
 Connecting to networks and making HTTP requests.
 Sending sensor data to services like ThingSpeak.
 Error handling for connection drops.
-cpp
+
+```cpp
 #include <WiFiS3.h>
 
 char ssid[] = "YourNetwork";
@@ -2019,19 +2133,24 @@ void loop() {
   // Add sensor send logic here
   delay(10000);
 }
+```
+
 Line-by-Line Explanation:
+
 WiFiS3 library (specific to R4) handles connection. Loop checks status; once connected, add code to publish data. Reconnect logic is key for reliability.
 
-Homework: Send temperature data from a DHT sensor to a web server.
+### Homework
+Send temperature data from a DHT sensor to a web server.
 
-Lesson 55: Controlling Arduino Projects with a Graphical User Interface over WiFi
+## Lesson 55: Controlling Arduino Projects with a Graphical User Interface over WiFi
+
 Key Concepts:
 
 Building a PyQt5 desktop GUI for remote control.
 Bidirectional communication (send commands, receive data).
 Creating buttons/sliders for LED, servo, or relay control.
 Full IoT dashboard example.
-python
+```python
 # Python GUI side (PyQt5 example - Arduino side uses WiFi server)
 import sys
 from PyQt5.QtWidgets import QApplication, QWidget, QPushButton
@@ -2051,20 +2170,25 @@ if __name__ == '__main__':
     app = QApplication(sys.argv)
     ex = App()
     sys.exit(app.exec_())
+```
+
 Line-by-Line Explanation:
+
 This is the desktop side; Arduino runs a server listening for commands. Button triggers socket send. Expand with labels for live sensor feedback.
 
-Homework: Create a full GUI that controls an LED and displays real-time ultrasonic distance.
+### Homework
+Create a full GUI that controls an LED and displays real-time ultrasonic distance.
 
+## Lesson 56: Advanced Data Visualization with ThingSpeak
 
-Lesson 56: Advanced Data Visualization with ThingSpeak
 Key Concepts:
 
 Sending multiple sensor data points (temp, humidity, light, distance) to a cloud channel.
 Configuring ThingSpeak widgets for real-time visualization.
 Managing data rates to stay within free-tier limits.
 Setting up alerts based on threshold triggers.
-cpp
+
+```cpp
 // Utilize WiFiS3 and HttpClient libraries
 // Send data in comma-separated format or JSON
 String data = "field1=" + String(temp) + "&field2=" + String(dist);
@@ -2072,37 +2196,49 @@ client.print("POST /update HTTP/1.1\n");
 client.print("Host: api.thingspeak.com\n");
 client.print("X-THINGSPEAKAPIKEY: YOUR_KEY\n");
 // ... finish request headers
+```
+
 Line-by-Line Explanation:
+
 Uses POST requests to update multiple fields simultaneously. The API key authenticates the device. Efficient HTTP handling prevents buffer overflows on the R4.
 
-Homework: Create a ThingSpeak dashboard that tracks temperature and motion frequency, with an email alert if temperature exceeds $35^\circ\text{C}$.
+### Homework
+Create a ThingSpeak dashboard that tracks temperature and motion frequency, with an email alert if temperature exceeds $35^\circ\text{C}$.
 
-Lesson 57: Creating a Web-Based Control Dashboard
+## Lesson 57: Creating a Web-Based Control Dashboard
+
 Key Concepts:
 
 Hosting an HTML/CSS/JavaScript control page directly on the R4.
 Using AJAX or Fetch API for near-instant response without page refreshes.
 Styling with CSS for mobile-friendly interfaces.
 Handling concurrent requests for multi-device interaction.
-cpp
+
+```cpp
 // HTML inside Arduino code
 client.println("<h1>Smart Home Control</h1>");
 client.println("<button onclick=\"fetch('/LEDON')\">LED ON</button>");
 // Server side:
 server.on("/LEDON", []() { digitalWrite(ledPin, HIGH); });
+```
+
 Line-by-Line Explanation:
+
 The R4 acts as a standalone mini-server. fetch() sends background requests to the Arduino, allowing the UI to remain active while commands are executed.
 
-Homework: Develop a dark-mode dashboard that displays current sensor data and toggles three different output devices (LEDs or Relays).
+### Homework
+Develop a dark-mode dashboard that displays current sensor data and toggles three different output devices (LEDs or Relays).
 
-Lesson 58: Introduction to NTP (Network Time Protocol)
+## Lesson 58: Introduction to NTP (Network Time Protocol)
+
 Key Concepts:
 
 Synchronizing the Arduino’s internal clock with global NTP servers.
 Formatting timestamps for data logging and scheduling.
 Accounting for time zones and Daylight Savings Time (DST).
 Scheduling tasks based on real-world time.
-cpp
+
+```cpp
 #include <WiFiUdp.h>
 #include <NTPClient.h>
 
@@ -2118,34 +2254,46 @@ void loop() {
   timeClient.update();
   Serial.println(timeClient.getFormattedTime());
 }
+```
+
 Line-by-Line Explanation:
+
 The device requests current time via UDP from pool servers. offsetSeconds allows for your local time zone. Syncing prevents drift over long uptime periods.
 
-Homework: Log data to an SD card with a precise date and time stamp for every entry.
+### Homework
+Log data to an SD card with a precise date and time stamp for every entry.
 
-Lesson 59: Multi-Device Communication with MQTT
+## Lesson 59: Multi-Device Communication with MQTT
+
 Key Concepts:
 
 Designing a local home automation network.
 Implementing a Broker (e.g., Mosquitto) to act as a message hub.
 Using topics (e.g., house/livingroom/temp) for structured messaging.
 Establishing "Last Will and Testament" for connectivity monitoring.
-cpp
+
+```cpp
 client.publish("house/livingroom/status", "online", true); // Retained message
 client.subscribe("house/kitchen/commands");
+```
+
 Line-by-Line Explanation:
+
 MQTT is event-driven; Arduino only acts when data changes. "Retained messages" ensure new subscribers get the last known state immediately upon connecting.
 
-Homework: Connect two Arduinos: one publishes motion data, the other subscribes to it and triggers an alarm.
+### Homework
+Connect two Arduinos: one publishes motion data, the other subscribes to it and triggers an alarm.
 
-Lesson 60: System Integration & Reliable IoT Architecture
+## Lesson 60: System Integration & Reliable IoT Architecture
+
 Key Concepts:
 
 Designing "fail-safe" code (auto-reconnect, watchdog timers).
 Modular code architecture (splitting files, .h headers).
 Remote firmware updates (OTA basics).
 Best practices for long-term deployment in the field.
-cpp
+
+```cpp
 // Logic: If status != WL_CONNECTED, call reconnectFunction()
 void reconnect() {
   while (WiFi.status() != WL_CONNECTED) {
@@ -2153,19 +2301,25 @@ void reconnect() {
     delay(5000);
   }
 }
+```
+
 Line-by-Line Explanation:
+
 Focuses on robustness. Watchdog timers reset the Arduino if the code hangs. Modular design makes complex projects (500+ lines) maintainable and debuggable.
 
-Homework: Combine lessons 56–59 into a single, modular "Smart Hub" project that survives WiFi reboots and logs all events with accurate timestamps.
+### Homework
+Combine lessons 56–59 into a single, modular "Smart Hub" project that survives WiFi reboots and logs all events with accurate timestamps.
 
-Lesson 60: System Integration & Reliable IoT Architecture (Continued)
+## Lesson 60: System Integration & Reliable IoT Architecture (Continued)
+
 Key Concepts:
 
 Building fail-safe systems with auto-reconnect logic and watchdog timers.
 Modular code using header files (.h) for complex projects.
 Basic Over-The-Air (OTA) updates for remote firmware.
 Best practices for long-term, field-deployed IoT devices.
-cpp
+
+```cpp
 #include <WiFiS3.h>
 void reconnect() {
   while (WiFi.status() != WL_CONNECTED) {
@@ -2178,19 +2332,25 @@ void loop() {
   if (WiFi.status() != WL_CONNECTED) reconnect();
   // Main project logic here
 }
+```
+
 Explanation:
+
 The reconnect() function ensures the device recovers from network drops. Watchdog timers (via AVR or R4-specific libraries) reset the board on hangs. Modular design keeps code maintainable beyond 500 lines.
 
-Homework: Add watchdog and reconnect to your Smart Hub from Lesson 59; test by unplugging the router.
+### Homework
+Add watchdog and reconnect to your Smart Hub from Lesson 59; test by unplugging the router.
 
-Lesson 61: First Steps with WiFi on the Arduino Uno R4
+## Lesson 61: First Steps with WiFi on the Arduino Uno R4
+
 Key Concepts:
 
 Enabling the R4's onboard WiFi module.
 Scanning for networks and connecting securely.
 Basic status checks and IP address retrieval.
 Handling connection timeouts gracefully.
-cpp
+
+```cpp
 #include <WiFiS3.h>
 char ssid[] = "YourNetwork"; char pass[] = "YourPassword";
 void setup() {
@@ -2201,19 +2361,26 @@ void setup() {
   }
   Serial.println("Connected! IP: " + WiFi.localIP().toString());
 }
+```
+
 Explanation:
+
 WiFiS3.h is specific to the R4's Renesas chip. The loop checks WL_CONNECTED status; localIP() confirms successful connection. Add retries for unreliable networks.
 
-Homework: Scan and print all available networks with signal strength using WiFi.scanNetworks().
+### Homework
 
-Lesson 62: First Look at WiFi on the Arduino Uno R4 (Expanded)
+Scan and print all available networks with signal strength using WiFi.scanNetworks().
+
+## Lesson 62: First Look at WiFi on the Arduino Uno R4 (Expanded)
+
 Key Concepts:
 
 Advanced WiFi diagnostics (RSSI, encryption type).
 Setting up as both client and access point (AP mode).
 Energy-efficient connection management.
 Integrating with prior sensors (e.g., DHT from earlier lessons).
-cpp
+
+```cpp
 #include <WiFiS3.h>
 void setup() {
   Serial.begin(9600);
@@ -2221,37 +2388,51 @@ void setup() {
   while (WiFi.status() != WL_CONNECTED) delay(100);
   Serial.print("Signal Strength: "); Serial.println(WiFi.RSSI());
 }
+```
+
 Explanation:
+
 WiFi.RSSI() gives signal quality in dBm. AP mode (WiFi.beginAP()) turns the R4 into a hotspot. Combine with sensor reads for a basic wireless transmitter.
 
-Homework: Create a sketch that reports temperature/humidity over Serial only when WiFi is connected and signal > -70 dBm.
+### Homework
 
-Lesson 63: Installing and Using Thonny for Python Development
+Create a sketch that reports temperature/humidity over Serial only when WiFi is connected and signal > -70 dBm.
+
+## Lesson 63: Installing and Using Thonny for Python Development
+
 Key Concepts:
 
 Setting up Thonny IDE (recommended for beginners).
 Running simple Python scripts on your PC to interact with Arduino.
 Variable types, basic I/O, and differences from Arduino C++.
 Preparing for WiFi data exchange in upcoming lessons.
-python
+
+```python
 # Simple Python example (run in Thonny)
 x = 7
 y = 2.5
 z = x + y
 print(f"Result: {z}")
+```
+
 Explanation:
+
 Thonny provides a clean interface with built-in debugger. Python is interpreted (vs. Arduino's compiled C), making it slower but easier for rapid desktop development. No variable declaration needed, but track types carefully.
 
-Homework: Write a Python script in Thonny that asks for two numbers, adds them, and prints the result with formatting.
+### Homework
 
-Lesson 64: Learn Python Essentials in One Session
+Write a Python script in Thonny that asks for two numbers, adds them, and prints the result with formatting.
+
+## Lesson 64: Learn Python Essentials in One Session
+
 Key Concepts:
 
 Core Python syntax: loops, conditionals, lists (arrays), and functions.
 Differences from Arduino (e.g., indentation instead of braces, dynamic typing).
 Input handling, string formatting, and basic math.
 Building toward desktop programs that communicate with the R4 over WiFi.
-python
+
+```python
 # Example from the lesson (full session covers for/while, if, lists)
 grades = []
 num = int(input("How many grades? "))
@@ -2259,19 +2440,25 @@ for i in range(num):
     grade = float(input("Enter grade: "))
     grades.append(grade)
 print("Average:", sum(grades)/len(grades))
+```
+
 Explanation:
+
 Python uses colons (:) and indentation for blocks. Lists replace arrays and support mixed types. range(num) loops from 0 to num-1. This session bridges Arduino knowledge to Python for GUI and data plotting.
 
-Homework: Modify the grades script to also print the highest and lowest grade using max() and min().
+### Homework
+Modify the grades script to also print the highest and lowest grade using `max()` and `min()`.
 
-Lesson 65: Passing Data Between Arduino and Desktop Over WiFi
+## Lesson 65: Passing Data Between Arduino and Desktop Over WiFi
+
 Key Concepts:
 
 Establishing basic TCP client-server communication.
 Sending sensor data from Arduino to a Python desktop app.
 Receiving commands back (e.g., toggle LED).
 Error handling for dropped connections.
-cpp
+
+```cpp
 // Arduino side (server)
 #include <WiFiS3.h>
 WiFiServer server(80);
@@ -2282,7 +2469,9 @@ void loop() {
     client.stop();
   }
 }
-python
+```
+
+```python
 # Python side (client - run in Thonny)
 import socket
 s = socket.socket()
@@ -2290,19 +2479,27 @@ s.connect(('Arduino_IP', 80))
 data = s.recv(1024)
 print(data.decode())
 s.close()
+```
+
 Explanation:
+
 Arduino runs a simple server on port 80. Python uses socket to connect and receive data. Expand this for bidirectional control in Lesson 66+.
 
-Homework: Send DHT22 temperature every 10 seconds from Arduino; display it live in a Python loop.
+### Homework
 
-Lesson 66: Passing Data Between Arduino and Desktop Over WiFi
+Send DHT22 temperature every 10 seconds from Arduino; display it live in a Python loop.
+
+
+## Lesson 66: Passing Data Between Arduino and Desktop Over WiFi
+
 Key Concepts:
 
 Setting up the Arduino R4 as a WiFi server.
 Using Python sockets on the desktop (via Thonny) as a client.
 Sending simple sensor data (e.g., analog readings) from Arduino to PC.
 Basic bidirectional data exchange with error handling.
-cpp
+
+```cpp
 // Arduino side (server)
 #include <WiFiS3.h>
 WiFiServer server(80);
@@ -2319,7 +2516,9 @@ void loop() {
     client.stop();
   }
 }
-python
+```
+
+```python
 # Python side (client - run in Thonny)
 import socket
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -2327,19 +2526,25 @@ s.connect(('YOUR_ARDUINO_IP', 80))
 data = s.recv(1024).decode().strip()
 print("Received:", data)
 s.close()
+```
+
 Explanation:
+
 The Arduino listens on port 80 and sends an analog sensor value on connection. Python connects via TCP socket, receives the data, and prints it. This forms the foundation for remote monitoring.
 
-Homework: Modify to send temperature from a DHT sensor and display it in Python every 5 seconds.
+### Homework
+Modify to send temperature from a DHT sensor and display it in Python every 5 seconds.
 
-Lesson 67: Control LED on Arduino Using Client Server Connection
+## Lesson 67: Control LED on Arduino Using Client Server Connection
+
 Key Concepts:
 
 Expanding the client-server model for command sending.
 Arduino parsing incoming strings (e.g., "ON" or "OFF").
 Desktop Python sending toggle commands over WiFi.
 Adding feedback (e.g., current LED state returned to client).
-cpp
+
+```cpp
 // Arduino side
 #include <WiFiS3.h>
 WiFiServer server(80);
@@ -2355,7 +2560,9 @@ void loop() {
     client.stop();
   }
 }
-python
+```
+
+``python
 # Python side
 import socket
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -2364,19 +2571,24 @@ s.sendall(b"ON\n")
 response = s.recv(1024).decode().strip()
 print(response)
 s.close()
+```
+
 Explanation:
+
 Arduino reads incoming commands as strings and controls the LED accordingly. Python sends the command byte string. This enables remote control without a physical GUI yet.
 
-Homework: Add support for brightness control (using PWM on pin 9) with values like "BRIGHT:128".
+### Homework: Add support for brightness control (using PWM on pin 9) with values like "BRIGHT:128".
 
-Lesson 68: Introduction to PyQt5 for Graphical Interfaces
+## Lesson 68: Introduction to PyQt5 for Graphical Interfaces
+
 Key Concepts:
 
 Installing and using PyQt5 in Thonny for desktop GUIs.
 Creating a basic window with buttons that trigger WiFi commands.
 Linking GUI events (button clicks) to socket sends from Lesson 67.
 Laying groundwork for live data display and control dashboards.
-python
+
+```python
 # Basic PyQt5 GUI example (Python side)
 import sys
 from PyQt5.QtWidgets import QApplication, QWidget, QPushButton, QVBoxLayout
@@ -2407,7 +2619,11 @@ if __name__ == '__main__':
     app = QApplication(sys.argv)
     gui = ArduinoGUI()
     sys.exit(app.exec_())
+```
+
 Explanation:
+
 This creates a simple window with an "LED ON" button. Clicking it establishes a socket connection and sends the command to the Arduino. Extend with more buttons and status labels in later lessons.
 
-Homework: Add an "LED OFF" button and a label that updates with Arduino feedback (e.g., current state).
+### Homework
+Add an "LED OFF" button and a label that updates with Arduino feedback (e.g., current state).

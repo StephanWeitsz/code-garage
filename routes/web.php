@@ -15,3 +15,5 @@ Route::middleware(['auth', 'role:admin', 'deployment.tools'])->group(function ()
     Route::get('/deployment-tools', [DeploymentToolsController::class, 'index'])->name('deployment-tools.index');
     Route::post('/deployment-tools/run', [DeploymentToolsController::class, 'run'])->name('deployment-tools.run');
 });
+
+require __DIR__.'/analytics.php';

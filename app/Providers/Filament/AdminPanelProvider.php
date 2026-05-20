@@ -36,11 +36,15 @@ class AdminPanelProvider extends PanelProvider
                 NavigationItem::make('Back To Site')
                     ->icon('heroicon-o-home')
                     ->url(url('/'))
-                    ->sort(-2),
+                    ->sort(-3),
                 NavigationItem::make('My Profile')
                     ->icon('heroicon-o-user-circle')
                     ->url(url('/user/profile'))
-                    ->sort(-1),
+                    ->sort(-2),
+                NavigationItem::make('Analytics')
+                    ->icon('heroicon-o-chart-bar')
+                    ->url(url('admin/analytics'))
+                    ->sort(-1),    
             ])
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
             ->discoverResources(in: base_path('packages/Courses/src/Presentation/Filament/Resources'), for: 'CodeGarage\\Courses\\Presentation\\Filament\\Resources')
