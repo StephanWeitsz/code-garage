@@ -25,24 +25,24 @@
     <div class="grid gap-4 xl:grid-cols-2">
         <section class="rounded-lg border border-gray-200 bg-white p-4 shadow-sm">
             <h2 class="text-base font-semibold text-gray-950">Daily Visitors</h2>
-            <div class="mt-4 h-72"><canvas id="dailyVisitorsChart"></canvas></div>
+            <div class="mt-4 h-72" wire:ignore><canvas id="dailyVisitorsChart" class="h-full w-full"></canvas></div>
         </section>
         <section class="rounded-lg border border-gray-200 bg-white p-4 shadow-sm">
             <h2 class="text-base font-semibold text-gray-950">Page Views Over Time</h2>
-            <div class="mt-4 h-72"><canvas id="pageViewsChart"></canvas></div>
+            <div class="mt-4 h-72" wire:ignore><canvas id="pageViewsChart" class="h-full w-full"></canvas></div>
         </section>
         <section class="rounded-lg border border-gray-200 bg-white p-4 shadow-sm">
             <h2 class="text-base font-semibold text-gray-950">Top Courses Viewed</h2>
-            <div class="mt-4 h-72"><canvas id="topCoursesChart"></canvas></div>
+            <div class="mt-4 h-72" wire:ignore><canvas id="topCoursesChart" class="h-full w-full"></canvas></div>
         </section>
         <section class="grid gap-4 md:grid-cols-2">
             <div class="rounded-lg border border-gray-200 bg-white p-4 shadow-sm">
                 <h2 class="text-base font-semibold text-gray-950">Device Breakdown</h2>
-                <div class="mt-4 h-64"><canvas id="deviceChart"></canvas></div>
+                <div class="mt-4 h-64" wire:ignore><canvas id="deviceChart" class="h-full w-full"></canvas></div>
             </div>
             <div class="rounded-lg border border-gray-200 bg-white p-4 shadow-sm">
                 <h2 class="text-base font-semibold text-gray-950">Browser Breakdown</h2>
-                <div class="mt-4 h-64"><canvas id="browserChart"></canvas></div>
+                <div class="mt-4 h-64" wire:ignore><canvas id="browserChart" class="h-full w-full"></canvas></div>
             </div>
         </section>
     </div>
@@ -139,28 +139,34 @@
                 if (analyticsCharts[id]) {
                     analyticsCharts[id].data.labels = labels;
                     analyticsCharts[id].data.datasets[0].data = data;
-                    analyticsCharts[id].update();
+                    requestAnimationFrame(() => {
+                        analyticsCharts[id].resize();
+                        analyticsCharts[id].update('none');
+                    });
                     return;
                 }
 
-                analyticsCharts[id] = new Chart(canvas, {
-                    type,
-                    data: {
-                        labels,
-                        datasets: [{
-                            label,
-                            data,
-                            borderColor: '#2563eb',
-                            backgroundColor: ['#2563eb', '#16a34a', '#f59e0b', '#dc2626', '#7c3aed', '#0891b2'],
-                            tension: 0.35
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: { legend: { display: type !== 'line' } },
-                        scales: type === 'doughnut' ? {} : { y: { beginAtZero: true, ticks: { precision: 0 } } }
-                    }
+                requestAnimationFrame(() => {
+                    analyticsCharts[id] = new Chart(canvas, {
+                        type,
+                        data: {
+                            labels,
+                            datasets: [{
+                                label,
+                                data,
+                                borderColor: '#2563eb',
+                                backgroundColor: ['#2563eb', '#16a34a', '#f59e0b', '#dc2626', '#7c3aed', '#0891b2'],
+                                tension: 0.35
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            resizeDelay: 100,
+                            plugins: { legend: { display: type !== 'line' } },
+                            scales: type === 'doughnut' ? {} : { y: { beginAtZero: true, ticks: { precision: 0 } } }
+                        }
+                    });
                 });
             }
 
