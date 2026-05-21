@@ -53,7 +53,7 @@
                 <h2 class="text-base font-semibold text-gray-950">Recent Visitors</h2>
             </div>
             <div class="overflow-x-auto">
-                <table class="min-w-full divide-y divide-gray-200 text-sm">
+                <table class="w-full divide-y divide-gray-200 text-sm">
                     <thead class="bg-gray-50 text-left text-xs uppercase tracking-wide text-gray-800">
                         <tr>
                             <th class="px-4 py-3">IP</th>
@@ -61,8 +61,8 @@
                             <th class="px-4 py-3">Platform</th>
                             <th class="px-4 py-3">Last Seen</th>
                             <th class="px-4 py-3">Current Page</th>
-                            <th class="px-4 py-3">User x</th>
-                            <th></th>
+                            <th class="px-4 py-3">User</th>
+                            <th class="px-4 py-3"></th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-100 text-gray-500">
@@ -81,7 +81,8 @@
                                     @endif
                                 </td>
                                 <td class="px-4 py-3">
-                                    <a href="{{ route('admin.analytics.visitors.show', ['visitorSession' => $visitor]) }}" class="text-blue-500 hover:text-blue-700">
+                                    <a href="{{ route('admin.analytics.visitors.show', $visitor) }}"
+                                       class="text-blue-500 hover:text-blue-700">
                                         <i class="fas fa-eye"></i>
                                     </a>
                                 </td>
@@ -112,7 +113,7 @@
             <h2 class="text-base font-semibold text-gray-950">Most Visited Pages</h2>
         </div>
         <div class="overflow-x-auto">
-            <table class="min-w-full divide-y divide-gray-200 text-sm">
+            <table class="w-full divide-y divide-gray-200 text-sm">
                 <thead class="bg-gray-50 text-left text-xs uppercase tracking-wide text-gray-800">
                     <tr>
                         <th class="px-4 py-3">URL</th>

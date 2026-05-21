@@ -1,7 +1,7 @@
 <div class="space-y-6 p-6">
     <div>
         <a href="{{ route('admin.analytics.dashboard') }}" class="text-sm font-medium text-blue-600">Back to analytics</a>
-        <h1 class="mt-2 text-2xl font-semibold text-gray-950">Visitor Journey</h1>
+        <h1 class="mt-2 text-2xl font-semibold text-white">Visitor Journey</h1>
         <p class="text-sm text-gray-500">
             {{ $visitorSession->user?->name ?: 'Anonymous visitor' }} · Last seen {{ $visitorSession->last_seen_at?->diffForHumans() }}
         </p>
