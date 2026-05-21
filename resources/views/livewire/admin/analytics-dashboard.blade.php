@@ -81,7 +81,7 @@
                                     @endif
                                 </td>
                                 <td class="px-4 py-3">
-                                    <a href="{{ route('visitors.show', $visitor) }}" class="text-blue-500 hover:text-blue-700">
+                                    <a href="{{ route('admin.analytics.visitors.show', ['visitorSession' => $visitor]) }}" class="text-blue-500 hover:text-blue-700">
                                         <i class="fas fa-eye"></i>
                                     </a>
                                 </td>
