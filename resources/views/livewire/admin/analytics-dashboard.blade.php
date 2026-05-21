@@ -61,7 +61,8 @@
                             <th class="px-4 py-3">Platform</th>
                             <th class="px-4 py-3">Last Seen</th>
                             <th class="px-4 py-3">Current Page</th>
-                            <th class="px-4 py-3">User</th>
+                            <th class="px-4 py-3">User x</th>
+                            <th></th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-100 text-gray-500">
@@ -78,6 +79,11 @@
                                     @else
                                         <span class="text-gray-400">Anonymous</span>
                                     @endif
+                                </td>
+                                <td class="px-4 py-3">
+                                    <a href="{{ route('visitors.show', $visitor) }}" class="text-blue-500 hover:text-blue-700">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
                                 </td>
                             </tr>
                         @endforeach
