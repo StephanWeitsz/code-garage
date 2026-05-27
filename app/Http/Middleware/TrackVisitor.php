@@ -7,6 +7,7 @@ use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
+use App\Support\Analytics\RiskClassifier;
 use Symfony\Component\HttpFoundation\Response;
 
 class TrackVisitor
@@ -72,7 +73,7 @@ class TrackVisitor
             'method' => $request->method(),
             'response_time' => (int) round((microtime(true) - $startedAt) * 1000),
             'course' => $this->coursePayload($request),
-        ];
+        ] + app(RiskClassifier::class)->classify($request);
     }
 
     private function coursePayload(Request $request): ?array

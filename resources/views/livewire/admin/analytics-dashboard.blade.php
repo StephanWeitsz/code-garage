@@ -7,13 +7,14 @@
         <div class="text-sm text-gray-500">Updates every 15 seconds</div>
     </div>
 
-    <div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-5">
+    <div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-6">
         @foreach ([
             'Visitors Today' => $stats['visitors_today'] ?? 0,
             'Active Visitors' => $stats['active_visitors'] ?? 0,
             'Registered Today' => $stats['registered_users_today'] ?? 0,
             'Total Page Views' => $stats['total_page_views'] ?? 0,
             'Anonymous Visitors' => $stats['anonymous_visitors'] ?? 0,
+            'High Risk Today' => $stats['high_risk_today'] ?? 0,
         ] as $label => $value)
             <section class="rounded-lg border border-gray-200 bg-white p-4 shadow-sm">
                 <div class="text-sm font-medium text-gray-500">{{ $label }}</div>
@@ -111,6 +112,7 @@
     <section class="rounded-lg border border-gray-200 bg-white shadow-sm">
         <div class="border-b border-gray-200 p-4">
             <h2 class="text-base font-semibold text-gray-950">Most Visited Pages</h2>
+            <p class="mt-1 text-sm text-gray-500">Suspicious scanner traffic is excluded from this table.</p>
         </div>
         <div class="overflow-x-auto">
             <table class="w-full divide-y divide-gray-200 text-sm">
@@ -133,6 +135,70 @@
             </table>
         </div>
     </section>
+
+    <div class="grid gap-4 xl:grid-cols-2">
+        <section class="rounded-lg border border-red-200 bg-white shadow-sm">
+            <div class="border-b border-red-100 p-4">
+                <h2 class="text-base font-semibold text-red-700">High Risk Activity</h2>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full divide-y divide-gray-200 text-sm">
+                    <thead class="bg-red-50 text-left text-xs uppercase tracking-wide text-red-800">
+                        <tr>
+                            <th class="px-4 py-3">URL</th>
+                            <th class="px-4 py-3">Host</th>
+                            <th class="px-4 py-3">Reason</th>
+                            <th class="px-4 py-3">Seen</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-100 text-gray-600">
+                        @forelse ($highRiskVisits as $visit)
+                            <tr>
+                                <td class="max-w-xs truncate px-4 py-3">{{ $visit->url }}</td>
+                                <td class="px-4 py-3">{{ $visit->request_host ?: 'Unknown' }}</td>
+                                <td class="max-w-xs truncate px-4 py-3">{{ $visit->risk_reason ?: 'Suspicious request' }}</td>
+                                <td class="px-4 py-3">{{ $visit->visited_at->diffForHumans() }}</td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="4" class="px-4 py-6 text-center text-gray-500">No high-risk activity recorded.</td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section class="rounded-lg border border-red-200 bg-white shadow-sm">
+            <div class="border-b border-red-100 p-4">
+                <h2 class="text-base font-semibold text-red-700">Risky Hosts</h2>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full divide-y divide-gray-200 text-sm">
+                    <thead class="bg-red-50 text-left text-xs uppercase tracking-wide text-red-800">
+                        <tr>
+                            <th class="px-4 py-3">Host</th>
+                            <th class="px-4 py-3">Attempts</th>
+                            <th class="px-4 py-3">Unique Visitors</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-100 text-gray-600">
+                        @forelse ($riskyHosts as $host)
+                            <tr>
+                                <td class="px-4 py-3">{{ $host->request_host ?: 'Unknown' }}</td>
+                                <td class="px-4 py-3">{{ number_format($host->attempts) }}</td>
+                                <td class="px-4 py-3">{{ number_format($host->unique_visitors) }}</td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="3" class="px-4 py-6 text-center text-gray-500">No risky hosts recorded.</td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </div>
 
     @once
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>

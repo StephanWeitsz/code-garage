@@ -58,11 +58,15 @@ class TrackPageVisitJob implements ShouldQueue
                 'visitor_session_id' => $session->id,
                 'user_id' => $this->payload['user_id'],
                 'url' => $this->payload['url'],
+                'request_host' => $this->payload['request_host'] ?? null,
                 'route_name' => $this->payload['route_name'],
                 'page_title' => $this->payload['page_title'],
                 'method' => $this->payload['method'],
                 'visited_at' => $visitedAt,
                 'response_time' => $this->payload['response_time'],
+                'is_suspicious' => $this->payload['is_suspicious'] ?? false,
+                'risk_level' => $this->payload['risk_level'] ?? 'normal',
+                'risk_reason' => $this->payload['risk_reason'] ?? null,
             ]);
 
             $this->trackCourseView($session, $visitedAt);

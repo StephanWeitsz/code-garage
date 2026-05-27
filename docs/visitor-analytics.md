@@ -111,6 +111,30 @@ URLs are stored with common sensitive query keys removed:
 
 Add any application-specific private paths or route names to `ignored_paths` and `ignored_route_names`.
 
+## Suspicious Traffic
+
+Requests sent to an unexpected host, such as the server IP address, are blocked by `BlockInvalidHost` with HTTP `421 Misdirected Request`.
+
+Configure allowed hosts:
+
+```env
+ANALYTICS_BLOCK_INVALID_HOSTS=true
+ANALYTICS_ALLOWED_HOSTS=code-garage.co.za,www.code-garage.co.za
+```
+
+Scanner-style requests such as `?phpinfo=-1`, `?XDEBUG_SESSION_START=phpstorm`, `.env`, `.git`, `wp-admin`, and similar probes are flagged on page visits with:
+
+- `is_suspicious`
+- `risk_level`
+- `risk_reason`
+- `request_host`
+
+Backfill existing records after deploying the migration:
+
+```bash
+php artisan analytics:classify-risk
+```
+
 ## Retention
 
 Configure retention:

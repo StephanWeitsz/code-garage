@@ -21,6 +21,10 @@ class AnalyticsService
             'registered_users_today' => $this->registrationsToday(),
             'total_page_views' => PageVisit::query()->count(),
             'anonymous_visitors' => VisitorSession::query()->whereNull('user_id')->count(),
+            'high_risk_today' => PageVisit::query()
+                ->where('is_suspicious', true)
+                ->whereDate('visited_at', today())
+                ->count(),
         ]);
     }
 
@@ -60,8 +64,31 @@ class AnalyticsService
     {
         return PageVisit::query()
             ->select('url', DB::raw('count(*) as visits'), DB::raw('count(distinct visitor_session_id) as unique_visitors'))
+            ->where('is_suspicious', false)
             ->groupBy('url')
             ->orderByDesc('visits')
+            ->limit($limit)
+            ->get();
+    }
+
+    public function highRiskVisits(int $limit = 15): Collection
+    {
+        return PageVisit::query()
+            ->with(['visitorSession.user:id,name,email'])
+            ->where('is_suspicious', true)
+            ->latest('visited_at')
+            ->limit($limit)
+            ->get();
+    }
+
+    public function riskyHosts(int $limit = 10): Collection
+    {
+        return PageVisit::query()
+            ->select('request_host', DB::raw('count(*) as attempts'), DB::raw('count(distinct visitor_session_id) as unique_visitors'))
+            ->where('is_suspicious', true)
+            ->whereNotNull('request_host')
+            ->groupBy('request_host')
+            ->orderByDesc('attempts')
             ->limit($limit)
             ->get();
     }
@@ -149,6 +176,7 @@ class AnalyticsService
     {
         return PageVisit::query()
             ->with(['visitorSession.user:id,name,email'])
+            ->where('is_suspicious', false)
             ->latest('visited_at')
             ->limit($limit)
             ->get();

@@ -14,15 +14,20 @@ class PageVisit extends Model
         'visitor_session_id',
         'user_id',
         'url',
+        'request_host',
         'route_name',
         'page_title',
         'method',
         'visited_at',
         'response_time',
+        'is_suspicious',
+        'risk_level',
+        'risk_reason',
     ];
 
     protected $casts = [
         'visited_at' => 'datetime',
+        'is_suspicious' => 'boolean',
     ];
 
     public function visitorSession(): BelongsTo

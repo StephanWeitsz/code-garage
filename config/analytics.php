@@ -24,6 +24,39 @@ return [
 
     'admin_prefix' => env('ANALYTICS_ADMIN_PREFIX', 'admin/analytics'),
 
+    'block_invalid_hosts' => env('ANALYTICS_BLOCK_INVALID_HOSTS', true),
+
+    'allowed_hosts' => array_values(array_filter(array_map('trim', explode(',', env(
+        'ANALYTICS_ALLOWED_HOSTS',
+        'code-garage.co.za,www.code-garage.co.za'
+    ))))),
+
+    'high_risk_query_keys' => [
+        'XDEBUG_SESSION_START',
+        'xdebug_session_start',
+        'phpinfo',
+    ],
+
+    'high_risk_patterns' => [
+        '.env',
+        '.git',
+        'phpinfo',
+        'xdebug_session_start',
+        'wp-admin',
+        'wp-login',
+        'xmlrpc.php',
+        'phpunit',
+        'vendor/phpunit',
+        'eval-stdin.php',
+        'composer.json',
+        'composer.lock',
+        'config.php',
+        'database.sql',
+        'backup',
+        'shell.php',
+        'cmd.php',
+    ],
+
     'ignored_methods' => ['POST', 'PUT', 'PATCH', 'DELETE'],
 
     'ignored_paths' => [

@@ -35,6 +35,8 @@ class AnalyticsDashboard extends Component
             'recentVisitors' => $analytics->recentVisitors(),
             'mostVisitedPages' => $analytics->mostVisitedPages(),
             'activityFeed' => $analytics->liveActivityFeed(),
+            'highRiskVisits' => $analytics->highRiskVisits(),
+            'riskyHosts' => $analytics->riskyHosts(),
         ])->layout('layouts.app');
     }
 
