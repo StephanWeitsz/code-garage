@@ -32,6 +32,24 @@
             <h2 class="text-base font-semibold text-gray-950">Page Views Over Time</h2>
             <div class="mt-4 h-72" wire:ignore><canvas id="pageViewsChart" class="h-full w-full"></canvas></div>
         </section>
+        <div class="flex flex-col gap-3 rounded-lg border border-gray-200 bg-white p-4 shadow-sm xl:col-span-2 sm:flex-row sm:items-center sm:justify-between">
+            <h2 class="text-base font-semibold text-gray-950">Graph Range</h2>
+            <div class="flex flex-wrap gap-2">
+                @foreach ($chartRangeOptions as $range => $label)
+                    <button
+                        type="button"
+                        wire:click="setChartRange('{{ $range }}')"
+                        @class([
+                            'rounded-md px-3 py-2 text-sm font-medium transition',
+                            'bg-blue-800 text-gray-600 shadow-sm' => $chartRange === $range,
+                            'border border-gray-200 bg-white text-gray-700 hover:bg-gray-50' => $chartRange !== $range,
+                        ])
+                    >
+                        {{ $label }}
+                    </button>
+                @endforeach
+            </div>
+        </div>
         <section class="rounded-lg border border-gray-200 bg-white p-4 shadow-sm">
             <h2 class="text-base font-semibold text-gray-950">Top Courses Viewed</h2>
             <div class="mt-4 h-72" wire:ignore><canvas id="topCoursesChart" class="h-full w-full"></canvas></div>

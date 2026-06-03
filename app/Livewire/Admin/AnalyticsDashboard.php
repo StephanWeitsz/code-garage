@@ -19,6 +19,16 @@ class AnalyticsDashboard extends Component
 
     public array $browserBreakdown = [];
 
+    public string $chartRange = 'today';
+
+    public array $chartRangeOptions = [
+        'today' => 'Today',
+        'week' => 'Week',
+        'month' => 'Month',
+        'year' => 'Year',
+        'all' => 'All records',
+    ];
+
     public function mount(AnalyticsService $analytics): void
     {
         $this->loadAnalytics($analytics);
@@ -26,6 +36,13 @@ class AnalyticsDashboard extends Component
 
     public function refreshDashboard(AnalyticsService $analytics): void
     {
+        $this->loadAnalytics($analytics);
+    }
+
+    public function setChartRange(string $range, AnalyticsService $analytics): void
+    {
+        $this->chartRange = array_key_exists($range, $this->chartRangeOptions) ? $range : 'today';
+
         $this->loadAnalytics($analytics);
     }
 
@@ -45,9 +62,9 @@ class AnalyticsDashboard extends Component
         $this->stats = $analytics->dashboardStats();
         $this->dailyVisitors = $analytics->dailyVisitors();
         $this->pageViews = $analytics->pageViewsOverTime();
-        $this->topCourses = $analytics->mostViewedCourses()->toArray();
-        $this->deviceBreakdown = $analytics->breakdown('device_type');
-        $this->browserBreakdown = $analytics->breakdown('browser');
+        $this->topCourses = $analytics->mostViewedCourses(range: $this->chartRange)->toArray();
+        $this->deviceBreakdown = $analytics->breakdown('device_type', $this->chartRange);
+        $this->browserBreakdown = $analytics->breakdown('browser', $this->chartRange);
 
         $this->dispatch('analytics-updated', charts: $this->chartPayload());
     }

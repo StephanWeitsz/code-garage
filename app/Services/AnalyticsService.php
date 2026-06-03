@@ -93,9 +93,9 @@ class AnalyticsService
             ->get();
     }
 
-    public function mostViewedCourses(int $limit = 10): Collection
+    public function mostViewedCourses(int $limit = 10, ?string $range = null): Collection
     {
-        return CourseView::query()
+        $query = CourseView::query()
             ->select(
                 'course_id',
                 'course_slug',
@@ -103,7 +103,11 @@ class AnalyticsService
                 DB::raw("sum(case when event_type = 'view' then 1 else 0 end) as views"),
                 DB::raw("sum(case when event_type = 'enroll_click' then 1 else 0 end) as enroll_clicks"),
                 DB::raw("sum(case when event_type = 'registration_conversion' then 1 else 0 end) as conversions"),
-            )
+            );
+
+        $this->applyDateRange($query, 'occurred_at', $range);
+
+        return $query
             ->groupBy('course_id', 'course_slug')
             ->orderByDesc('views')
             ->limit($limit)
@@ -160,13 +164,18 @@ class AnalyticsService
         );
     }
 
-    public function breakdown(string $column): array
+    public function breakdown(string $column, ?string $range = null): array
     {
-        return VisitorSession::query()
+        $query = VisitorSession::query()
             ->select($column, DB::raw('count(*) as total'))
-            ->whereNotNull($column)
+            ->whereNotNull($column);
+
+        $this->applyDateRange($query, 'first_seen_at', $range);
+
+        return $query
             ->groupBy($column)
             ->orderByDesc('total')
+            ->orderBy($column)
             ->limit(8)
             ->pluck('total', $column)
             ->toArray();
@@ -200,6 +209,17 @@ class AnalyticsService
                 return [$day => (int) ($rows[$day] ?? 0)];
             })
             ->toArray();
+    }
+
+    private function applyDateRange($query, string $column, ?string $range): void
+    {
+        match ($range) {
+            'today' => $query->whereBetween($column, [now()->startOfDay(), now()->endOfDay()]),
+            'week' => $query->whereBetween($column, [now()->subDays(6)->startOfDay(), now()->endOfDay()]),
+            'month' => $query->whereBetween($column, [now()->startOfMonth(), now()->endOfDay()]),
+            'year' => $query->whereBetween($column, [now()->startOfYear(), now()->endOfDay()]),
+            default => null,
+        };
     }
 
     private function cacheTtl(): int
