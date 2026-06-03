@@ -41,7 +41,7 @@
                         wire:click="setChartRange('{{ $range }}')"
                         @class([
                             'rounded-md px-3 py-2 text-sm font-medium transition',
-                            'bg-blue-800 text-gray-600 shadow-sm' => $chartRange === $range,
+                            'bg-blue-200 text-gray-600 shadow-sm' => $chartRange === $range,
                             'border border-gray-200 bg-white text-gray-700 hover:bg-gray-50' => $chartRange !== $range,
                         ])
                     >
