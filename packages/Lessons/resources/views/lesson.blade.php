@@ -50,6 +50,17 @@
                     <a href="{{ $lesson->content }}" target="_blank" rel="noreferrer">{{ $lesson->content }}</a>
                 @elseif ($lesson->content_type->value === 'markdown')
                     {!! $renderedContent !!}
+                @elseif ($lesson->content_type->value === 'image')
+                    <div class="lesson-image-gallery">
+                        @forelse (($lesson->lesson_images ?? []) as $image)
+                            @php($imageUrl = \Illuminate\Support\Facades\Storage::disk('public')->url($image))
+                            <figure class="lesson-image-item">
+                                <img src="{{ $imageUrl }}" alt="{{ pathinfo($image, PATHINFO_FILENAME) }}">
+                            </figure>
+                        @empty
+                            <p class="muted">No images have been uploaded for this lesson yet.</p>
+                        @endforelse
+                    </div>
                 @else
                     <p>{!! nl2br(e($lesson->content)) !!}</p>
                 @endif

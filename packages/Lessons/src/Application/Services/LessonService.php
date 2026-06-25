@@ -33,6 +33,7 @@ class LessonService extends ApplicationService
         return $this->transaction(function () use ($attributes) {
             return $this->lessons->create([
                 ...$attributes,
+                'content' => $attributes['content'] ?? '',
                 'sequence' => $attributes['sequence'] ?? $this->lessons->nextSequenceForSection((int) $attributes['course_section_id']),
                 'slug' => Str::slug($attributes['title']),
             ]);
@@ -45,6 +46,8 @@ class LessonService extends ApplicationService
             if (isset($attributes['title'])) {
                 $attributes['slug'] = Str::slug($attributes['title']);
             }
+
+            $attributes['content'] = $attributes['content'] ?? '';
 
             return $this->lessons->update($lesson, $attributes);
         });

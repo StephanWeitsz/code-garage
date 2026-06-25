@@ -17,8 +17,10 @@ class StoreLessonRequest extends FormRequest
             'course_id' => ['required', 'integer', 'exists:courses,id'],
             'course_section_id' => ['required', 'integer', 'exists:course_sections,id'],
             'title' => ['required', 'string', 'max:255'],
-            'content' => ['required', 'string'],
-            'content_type' => ['required', 'in:text,markdown,video,code'],
+            'content' => ['nullable', 'required_unless:content_type,image', 'string'],
+            'content_type' => ['required', 'in:text,markdown,video,code,image'],
+            'lesson_images' => ['nullable', 'array'],
+            'lesson_images.*' => ['string', 'max:2048'],
             'sequence' => ['required', 'integer', 'min:1'],
             'is_preview' => ['nullable', 'boolean'],
         ];

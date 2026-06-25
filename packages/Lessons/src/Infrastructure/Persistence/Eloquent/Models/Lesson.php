@@ -16,6 +16,7 @@ class Lesson extends Model
         'slug',
         'content',
         'content_type',
+        'lesson_images',
         'sequence',
         'is_preview',
     ];
@@ -23,6 +24,7 @@ class Lesson extends Model
     protected $casts = [
         'is_preview' => 'boolean',
         'content_type' => LessonContentType::class,
+        'lesson_images' => 'array',
     ];
 
     public function course(): BelongsTo

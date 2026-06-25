@@ -14,6 +14,8 @@ use Filament\Tables\Filters\Filter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\HtmlString;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use CodeGarage\Courses\Infrastructure\Persistence\Eloquent\Models\Course;
 use CodeGarage\Lessons\Infrastructure\Persistence\Eloquent\Models\CourseSection;
 use CodeGarage\Lessons\Infrastructure\Persistence\Eloquent\Models\Lesson;
@@ -85,20 +87,46 @@ class LessonResource extends Resource
                 Forms\Components\TextInput::make('slug')
                     ->required()
                     ->maxLength(255),
-                Forms\Components\Textarea::make('content')
-                    ->required()
-                    ->rows(16)
-                    ->helperText('Use Markdown when the content type is Markdown. Headings, lists, links, and fenced code blocks will render for students.')
-                    ->columnSpanFull(),
                 Forms\Components\Select::make('content_type')
                     ->options([
                         'text' => 'Text',
                         'markdown' => 'Markdown',
                         'video' => 'Video',
                         'code' => 'Code',
+                        'image' => 'Image gallery',
                     ])
                     ->native(false)
+                    ->live()
                     ->required(),
+                Forms\Components\Textarea::make('content')
+                    ->default('')
+                    ->required(fn (Get $get): bool => $get('content_type') !== 'image')
+                    ->dehydrateStateUsing(fn (?string $state): string => $state ?? '')
+                    ->rows(16)
+                    ->helperText('Use Markdown when the content type is Markdown. Paste image snippets from the lesson images panel where you want them to appear.')
+                    ->columnSpanFull(),
+                Forms\Components\Section::make('Lesson images')
+                    ->description('Upload images for this lesson. Markdown lessons can use these files inline; image gallery lessons display the uploaded images as the lesson content.')
+                    ->schema([
+                        Forms\Components\FileUpload::make('lesson_images')
+                            ->label('Images')
+                            ->disk('public')
+                            ->directory(fn (Get $get, ?Lesson $record): string => static::lessonImageDirectory($get('course_id'), $get('title'), $record))
+                            ->image()
+                            ->multiple()
+                            ->live()
+                            ->reorderable()
+                            ->openable()
+                            ->downloadable()
+                            ->preserveFilenames()
+                            ->maxSize(5120)
+                            ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/webp', 'image/gif', 'image/svg+xml'])
+                            ->helperText('Files are stored under the course and lesson folder on the public disk.'),
+                        Forms\Components\Placeholder::make('lesson_image_markdown')
+                            ->label('Markdown snippets')
+                            ->content(fn (Get $get): HtmlString => static::lessonImageMarkdownExamples($get('lesson_images'))),
+                    ])
+                    ->columnSpanFull(),
                 Forms\Components\TextInput::make('sequence')
                     ->numeric()
                     ->required(),
@@ -235,6 +263,43 @@ class LessonResource extends Resource
             'view' => Pages\ViewLesson::route('/{record}'),
             'edit' => Pages\EditLesson::route('/{record}/edit'),
         ];
+    }
+
+
+    protected static function lessonImageDirectory($courseId, ?string $title, ?Lesson $record): string
+    {
+        $course = $record?->course ?? (filled($courseId) ? Course::query()->find($courseId) : null);
+        $courseSlug = $course?->slug ?: 'course-'.$courseId;
+        $lessonSlug = $record?->slug ?: Str::slug($title ?: 'new-lesson');
+
+        return sprintf('courses/%s/lessons/%s/images', $courseSlug, $lessonSlug ?: 'new-lesson');
+    }
+
+    protected static function lessonImageMarkdownExamples($images): HtmlString
+    {
+        $images = collect(is_array($images) ? $images : [])
+            ->filter()
+            ->values();
+
+        if ($images->isEmpty()) {
+            return new HtmlString('<span class="text-sm text-gray-500">Upload lesson images, then copy the generated Markdown into the lesson content.</span>');
+        }
+
+        $items = $images->map(function (string $path): string {
+            $url = Storage::disk('public')->url($path);
+            $name = pathinfo($path, PATHINFO_FILENAME) ?: 'lesson image';
+            $alt = Str::headline(str_replace(['-', '_'], ' ', $name));
+            $markdown = sprintf('![%s](%s)', $alt, $url);
+
+            return sprintf(
+                '<li class="space-y-1"><img src="%s" alt="%s" class="h-20 w-auto rounded border border-gray-200 object-contain"><code class="block whitespace-pre-wrap rounded bg-gray-100 px-2 py-1 text-xs text-gray-800">%s</code></li>',
+                e($url),
+                e($alt),
+                e($markdown),
+            );
+        })->implode('');
+
+        return new HtmlString('<ul class="space-y-3">'.$items.'</ul>');
     }
 
     protected static function courseOptions(): array

@@ -1,453 +1,8 @@
-# Arduino
+# Serial Monitor
 
-## Lesson 1: Getting Started with Arduino
+# Components
 
-### Concepts: 
-
-- What is Arduino, 
-- how to install the IDE, 
-- first look at the board, 
-- safety notes.
-
-### Code: None (setup only)
-
-- downloading the Arduino IDE
-- connecting the Uno via USB
-- selecting the correct board/port.
- 
-stresses that the board is a microcontroller that can read sensors and control outputs.
-
-### Homework: 
-Download and install the Arduino IDE. Open the “Blink” example and upload it to your board.
-
-## Lesson 2: First Sketch – Blink
-```cpp
-void setup() {
-  pinMode(13, OUTPUT);   // Set pin 13 as output
-}
-
-void loop() {
-  digitalWrite(13, HIGH);  // Turn LED on
-  delay(1000);             // Wait 1 second
-  digitalWrite(13, LOW);   // Turn LED off
-  delay(1000);             // Wait 1 second
-}
-```
-Line-by-line:
-
-pinMode(13, OUTPUT) — Tells Arduino that pin 13 (built-in LED) is an output.
-digitalWrite(13, HIGH) — Sends 5V to the pin (LED lights).
-delay(1000) — Pauses for 1000 milliseconds (1 second).
-The loop() function repeats forever.
-
-### Homework: 
-Change the delays so the LED blinks faster or slower. Try different pins if you have an external LED.
-
-## Lesson 3: Variables & Data Types
-```cpp
-int ledPin = 13;
-int delayTime = 500;
-
-void setup() {
-  pinMode(ledPin, OUTPUT);
-}
-
-void loop() {
-  digitalWrite(ledPin, HIGH);
-  delay(delayTime);
-  digitalWrite(ledPin, LOW);
-  delay(delayTime);
-}
-```
-
-Explanation: Variables store data. int is for whole numbers. Using variables makes code easier to change (one place to edit the pin or delay).
-
-### Homework:
-Add a second variable for a different delay on/off time.
-
-## Lesson 4: for Loops
-```cpp
-int ledPin = 13;
-
-void setup() {
-  pinMode(ledPin, OUTPUT);
-}
-
-void loop() {
-  for (int i = 0; i < 5; i++) {     // Run 5 times
-    digitalWrite(ledPin, HIGH);
-    delay(200);
-    digitalWrite(ledPin, LOW);
-    delay(200);
-  }
-  delay(2000);   // Long pause after 5 blinks
-}
-```
-
-Explanation: A for loop repeats a block of code a set number of times. i = 0 is the start, i < 5 is the condition, i++ increments the counter.
-
-### Homework:
-Make the LED blink SOS in Morse code (3 short, 3 long, 3 short) using for loops.
-
-## Lesson 5: Reading Analog Values (Potentiometer)
-```cpp
-int potPin = A0;
-int ledPin = 13;
-int val = 0;
-
-void setup() {
-  pinMode(ledPin, OUTPUT);
-  Serial.begin(9600);
-}
-
-void loop() {
-  val = analogRead(potPin);       // 0–1023
-  Serial.println(val);
-  digitalWrite(ledPin, HIGH);
-  delay(val);
-  digitalWrite(ledPin, LOW);
-  delay(val);
-}
-```
-Explanation: analogRead() returns 0–1023 from the potentiometer. The value controls the blink speed. Serial Monitor prints the reading.
-
-### Homework:
-Use the potentiometer value to control the brightness of an LED with analogWrite() (PWM).
-
-## Lesson 6: while Loops
-
-Key Concepts:
-
-Difference between for loops and while loops.
-while loops run as long as a condition is true.
-Useful when you don’t know in advance how many times the loop should run.
-Introduction to Serial.begin() for debugging.
-
-```cpp
-int ledPin = 13;
-int delayTime = 500;
-int count = 0;
-
-void setup() {
-  pinMode(ledPin, OUTPUT);
-  Serial.begin(9600);
-}
-
-void loop() {
-  while (count < 5) {              // Run while count is less than 5
-    digitalWrite(ledPin, HIGH);
-    delay(delayTime);
-    digitalWrite(ledPin, LOW);
-    delay(delayTime);
-    count = count + 1;             // Increment counter
-    Serial.print("Blink number: ");
-    Serial.println(count);
-  }
-}
-```
-
-Line-by-Line Explanation:
-
-Serial.begin(9600) — Starts serial communication at 9600 baud so you can see output in the Serial Monitor.
-while (count < 5) — The loop body repeats only while the condition is true.
-count = count + 1 — Manually increments the counter (no automatic i++ like in for loops).
-Serial.print() and Serial.println() — Print messages to the Serial Monitor for debugging.
-
-### Homework
-Modify the sketch so the LED blinks 10 times using a while loop and prints the current count each time.
-
-## Lesson 7: if Statements & Comparison Operators
-
-Key Concepts:
-
-Conditional logic with if, else if, and else.
-Comparison operators (==, >, <, !=, >=, <=).
-Using a button (or switch) as digital input with digitalRead().
-
-```cpp
-int buttonPin = 2;
-int ledPin = 13;
-int buttonState = 0;
-
-void setup() {
-  pinMode(buttonPin, INPUT);
-  pinMode(ledPin, OUTPUT);
-  Serial.begin(9600);
-}
-
-void loop() {
-  buttonState = digitalRead(buttonPin);
-  Serial.println(buttonState);
-  
-  if (buttonState == HIGH) {       // Button pressed
-    digitalWrite(ledPin, HIGH);
-  } else {
-    digitalWrite(ledPin, LOW);
-  }
-}
-```
-
-Line-by-Line Explanation:
-
-pinMode(buttonPin, INPUT) — Sets pin 2 as an input to read the button.
-digitalRead(buttonPin) — Reads whether the pin is HIGH (5V) or LOW (0V).
-if (buttonState == HIGH) — Checks if the condition is true; if so, turn LED on.
-else — Runs only if the if condition is false.
-
-### Homework
-Add an else if condition so the LED blinks rapidly when the button is pressed and stays off otherwise.
-
-## Lesson 8: else if Statements & Multiple Conditions
-
-Key Concepts:
-
-Chaining multiple conditions with else if.
-Using multiple buttons or a potentiometer to control different LED behaviors.
-Logical operators (&&, ||, !).
-
-```cpp
-int ledPin = 13;
-int sensorPin = A0;
-int sensorValue = 0;
-
-void setup() {
-  pinMode(ledPin, OUTPUT);
-  Serial.begin(9600);
-}
-
-void loop() {
-  sensorValue = analogRead(sensorPin);
-  Serial.println(sensorValue);
-  
-  if (sensorValue < 300) {
-    digitalWrite(ledPin, LOW);           // Off
-  } else if (sensorValue < 700) {
-    digitalWrite(ledPin, HIGH);          // On steady
-    delay(100);
-  } else {
-    // Fast blink for high values
-    digitalWrite(ledPin, HIGH);
-    delay(50);
-    digitalWrite(ledPin, LOW);
-    delay(50);
-  }
-}
-```
-
-Line-by-Line Explanation:
-
-The code reads an analog sensor (potentiometer).
-Three separate ranges are tested in order: low → medium (else if) → high.
-Only one block executes per loop cycle.
-
-### Homework
-Wire two push buttons and use if / else if to make the LED do three different things (off, steady on, blinking) depending on which button is pressed.
-
-## Lesson 9: Functions (Part 1)
-
-Key Concepts:
-
-Why functions make code cleaner and reusable.
-Creating your own functions with void return type.
-Passing parameters to functions.
-
-```cpp
-int ledPin = 13;
-
-void setup() {
-  pinMode(ledPin, OUTPUT);
-}
-
-void loop() {
-  blinkLED(5, 200);     // Call function with parameters
-  delay(1000);
-}
-
-// Custom function
-void blinkLED(int numBlinks, int delayTime) {
-  for (int i = 0; i < numBlinks; i++) {
-    digitalWrite(ledPin, HIGH);
-    delay(delayTime);
-    digitalWrite(ledPin, LOW);
-    delay(delayTime);
-  }
-}
-```
-
-Line-by-Line Explanation:
-
-void blinkLED(int numBlinks, int delayTime) — Defines a function that accepts two integer parameters.
-The function contains the reusable blinking code.
-Calling blinkLED(5, 200) runs the blink pattern 5 times with 200 ms delays.
-
-### Homework
-Create a second function called SOS() that uses your new blinkLED() function to flash the Morse code SOS pattern.
-
-## Lesson 10: Functions (Part 2) – Return Values
-
-Key Concepts:
-
-Functions that return values (not just void).
-Using returned data in calculations.
-Organizing larger sketches with multiple functions.
-
-```cpp
-int ledPin = 13;
-
-void setup() {
-  pinMode(ledPin, OUTPUT);
-  Serial.begin(9600);
-}
-
-void loop() {
-  int result = addNumbers(7, 12);
-  Serial.print("Sum = ");
-  Serial.println(result);
-  
-  if (result > 15) {
-    digitalWrite(ledPin, HIGH);
-  } else {
-    digitalWrite(ledPin, LOW);
-  }
-  delay(1000);
-}
-
-int addNumbers(int a, int b) {
-  int sum = a + b;
-  return sum;               // Return the calculated value
-}
-```
-
-Line-by-Line Explanation:
-
-int addNumbers(int a, int b) — Function returns an int instead of void.
-return sum; sends the result back to the caller.
-The returned value is stored in result and used both for Serial output and LED control.
-
-### Homework
-Create a function that calculates the average of three sensor readings and returns the result. Use it to control an LED or print to Serial.
-
-## Lesson 11: Using the Serial Monitor for Debugging
-
-Key Concepts:
-
-How to send and receive data between Arduino and your computer.
-Serial.begin(), Serial.print(), and Serial.println().
-Basic user input using Serial.available() and Serial.read().
-Debugging programs by printing variable values in real time.
-
-```cpp
-int myNumber = 0;
-
-void setup() {
-  Serial.begin(9600);               // Start serial communication
-  Serial.println("Please enter a number:");
-}
-
-void loop() {
-  if (Serial.available() > 0) {     // Check if data is available
-    myNumber = Serial.parseInt();   // Read integer from Serial
-    Serial.print("You entered: ");
-    Serial.println(myNumber);
-    Serial.println("Please enter another number:");
-  }
-}
-```
-
-Line-by-Line Explanation:
-
-Serial.begin(9600) opens the serial port at 9600 baud (must match Serial Monitor setting).
-Serial.println() prints text followed by a newline.
-Serial.available() > 0 checks if the user has typed something.
-Serial.parseInt() reads the typed number and converts it to an integer.
-The loop continuously waits for new input.
-
-### Homework
-Modify the sketch to ask the user for two numbers, add them together, and print the sum.
-
-## Lesson 12: Reading Strings from Serial
-
-Key Concepts:
-
-Reading text (strings) instead of just numbers.
-Difference between parseInt() and readString().
-Using the String data type.
-Trimming whitespace from user input.
-
-```cpp
-String myName = "";
-
-void setup() {
-  Serial.begin(9600);
-  Serial.println("What is your name?");
-}
-
-void loop() {
-  if (Serial.available() > 0) {
-    myName = Serial.readString();      // Read entire line as text
-    myName.trim();                     // Remove extra spaces/newlines
-    Serial.print("Hello, ");
-    Serial.println(myName);
-    Serial.println("Nice to meet you!");
-    delay(2000);
-    Serial.println("What is your name?");
-  }
-}
-```
-
-Line-by-Line Explanation:
-
-String myName = "" creates an empty string variable.
-Serial.readString() reads everything typed until a timeout (usually until Enter).
-myName.trim() removes leading/trailing whitespace and carriage returns.
-The sketch greets the user by name.
-
-### Homework
-Create a program that asks for your favorite color and responds with a fun message based on the color entered.
-
-## Lesson 13: Using a Potentiometer with Analog Input
-
-Key Concepts:
-
-Reading analog values (0–1023) from a potentiometer on pin A0–A5.
-Mapping analog values to useful ranges with map().
-Controlling LED brightness with analogWrite() (PWM on pins 3,5,6,9,10,11).
-Smoothing noisy analog readings.
-
-```cpp
-int potPin = A0;
-int ledPin = 9;          // Must be PWM pin
-int potValue = 0;
-int brightness = 0;
-
-void setup() {
-  pinMode(ledPin, OUTPUT);
-  Serial.begin(9600);
-}
-
-void loop() {
-  potValue = analogRead(potPin);           // 0 to 1023
-  brightness = map(potValue, 0, 1023, 0, 255);  // Scale to PWM range
-  analogWrite(ledPin, brightness);         // Set LED brightness
-  Serial.print("Pot Value: ");
-  Serial.print(potValue);
-  Serial.print("  Brightness: ");
-  Serial.println(brightness);
-  delay(100);
-}
-```
-
-Line-by-Line Explanation:
-
-analogRead(potPin) returns 0–1023 depending on knob position.
-map() converts that range into 0–255 for PWM output.
-analogWrite() creates a varying voltage to dim the LED smoothly.
-Serial Monitor shows both raw and mapped values.
-
-### Homework
-Use the potentiometer to control the blink rate of an LED instead of its brightness.
-
-## Lesson 14: Using a Photoresistor (Light Sensor)
+## Lesson 15: Using a Photoresistor (Light Sensor)
 
 Key Concepts:
 
@@ -490,7 +45,7 @@ LED acts as an automatic night light.
 ### Homework
 Add a second LED (red and green) so the green LED turns on in bright light and red in the dark.
 
-## Lesson 15: Using a Button with Debouncing
+## Lesson 16: Using a Button with Debouncing
 
 Key Concepts:
 
@@ -537,7 +92,8 @@ The LED stays in its new state until pressed again.
 ### Homework
 Improve the debounce using the millis() timing function instead of delay() so the program doesn’t freeze during the wait.
 
-## Lesson 16: millis() – Non-Blocking Timing
+
+## Lesson 17: millis() – Non-Blocking Timing
 
 Key Concepts:
 
@@ -583,7 +139,7 @@ The LED toggles independently while the loop keeps running.
 ### Homework
 Add a second LED that blinks at a different rate using another millis() timer.
 
-## Lesson 17: Using Arrays
+## Lesson 18: Using Arrays
 
 Key Concepts:
 
@@ -620,7 +176,8 @@ The second for loop cycles through the array to blink each LED in sequence.
 ### Homework
 Create an array of delay times and use it to make each LED blink at a different speed.
 
-## Lesson 18: 7-Segment Display (Part 1)
+
+## Lesson 19: 7-Segment Display (Part 1)
 
 Key Concepts:
 
@@ -676,7 +233,7 @@ The custom displayDigit() function makes the main loop cleaner.
 ### Homework
 Modify the sketch to count from 0 to 9 and then back down to 0.
 
-## Lesson 19: 7-Segment Display (Part 2) – Two Digits
+## Lesson 20: 7-Segment Display (Part 2) – Two Digits
 
 Key Concepts:
 
@@ -750,7 +307,7 @@ The short delay(5) and rapid switching prevent visible flicker.
 ### Homework
 Make the two-digit display count up from 00 to 99 automatically.
 
-## Lesson 20: Using a Shift Register (74HC595)
+## Lesson 21: Using a Shift Register (74HC595)
 
 Key Concepts:
 
@@ -790,7 +347,7 @@ Each number 0–255 lights a unique pattern on the 8 LEDs.
 ### Homework
 Use the shift register to create a “running light” (Knight Rider) effect across the 8 LEDs.
 
-## Lesson 21: The Piezo Buzzer
+## Lesson 22: The Piezo Buzzer
 
 Key Concepts:
 
@@ -823,7 +380,7 @@ noTone(pin) stops the square wave, silencing the buzzer.
 ### Homework
 Program the Arduino to play a simple three-note melody (e.g., Do-Re-Mi).
 
-## Lesson 22: Ultrasonic Distance Sensor (HC-SR04)
+## Lesson 23: Ultrasonic Distance Sensor (HC-SR04)
 
 Key Concepts:
 
@@ -872,7 +429,7 @@ We divide by 2 because the sound traveled to the object and back.
 ### Homework
 Build a "parking sensor" that beeps faster as an object gets closer to the sensor.
 
-## Lesson 23: Servo Motor Control
+## Lesson 24: Servo Motor Control
 
 Key Concepts:
 
@@ -909,7 +466,7 @@ myServo.write(angle) moves the servo arm to the specified degree.
 ### Homework
 Control the servo position using a potentiometer; as you turn the knob, the servo arm follows the angle.
 
-## Lesson 24: DC Motor Control (Transistors)
+## Lesson 25: DC Motor Control (Transistors)
 
 Key Concepts:
 
@@ -941,7 +498,7 @@ analogWrite() varies the voltage effectively changing motor speed.
 ### Homework
 Create a "dimmer" switch for your motor using a potentiometer to control speed from stop to full throttle.
 
-## Lesson 25: The H-Bridge (L293D)
+## Lesson 26: The H-Bridge (L293D)
 Key Concepts:
 
 Controlling motor direction (forward/reverse), not just speed.
@@ -983,7 +540,7 @@ L293D allows changing the polarity across the motor terminals.
 ### Homework
 Build a system where a button toggle reverses the direction of the DC motor.
 
-## Lesson 26: Using an LCD Display (16x2)
+## Lesson 27: Using an LCD Display (16x2)
 Key Concepts:
 
 Interfacing a 16x2 LCD using the LiquidCrystal library.
@@ -1018,7 +575,7 @@ The loop updates a running timer on the bottom row without clearing the top.
 ### Homework
 Display a custom message on the first row and a live counter on the second.
 
-## Lesson 27: Scrolling Text on LCD
+## Lesson 28: Scrolling Text on LCD
 Key Concepts:
 
 Using scrollDisplayLeft() and scrollDisplayRight() for moving text.
@@ -1056,7 +613,7 @@ delay(300) sets a readable scroll speed.
 ### Homework
 Make the top row static ("Temperature:") and scroll a changing sensor value on the bottom row.
 
-## Lesson 28: Custom Characters on LCD
+## Lesson 29: Custom Characters on LCD
 Key Concepts:
 
 Creating up to 8 custom 5x8 pixel characters with createChar().
@@ -1098,7 +655,7 @@ lcd.write(byte(0)) prints the custom character.
 ### Homework
 Create a custom "smiley face" and a "battery" icon, then display both on the LCD.
 
-## Lesson 29: Reading Temperature with LM35 Sensor
+## Lesson 30: Reading Temperature with LM35 Sensor
 
 Key Concepts:
 
@@ -1135,7 +692,7 @@ The loop reads and prints every second.
 ### Homework
 Combine this with the LCD from Lesson 26 to show live temperature on the display.
 
-## Lesson 30: Using a DHT11 Temperature & Humidity Sensor
+## Lesson 31: Using a DHT11 Temperature & Humidity Sensor
 
 Key Concepts:
 
@@ -1185,7 +742,7 @@ Line-by-Line Explanation:
 ### Homework
 Display both humidity and temperature on a 16x2 LCD, updating every 2 seconds.
 
-## Lesson 31: SD Card Reader/Writer
+## Lesson 32: SD Card Reader/Writer
 
 Key Concepts:
 
@@ -1231,7 +788,7 @@ Always check if the file opened successfully to avoid errors.
 
 ### Homework: Log temperature or distance sensor readings every 10 seconds to a CSV file on the SD card.
 
-## Lesson 32: IR Remote Control
+## Lesson 33: IR Remote Control
 
 Key Concepts:
 
@@ -1270,7 +827,7 @@ decode(&results) checks for a received signal; results.value gives the HEX code.
 ### Homework
 Use specific button codes to control an LED or servo (e.g., power button toggles an LED).
 
-# Lesson 33: Stepper Motors (Part 1)
+## Lesson 34: Stepper Motors (Part 1)
 
 Key Concepts:
 
@@ -1306,7 +863,7 @@ Positive `step()` moves clockwise; negative moves counterclockwise.
 ### Homework
 Make the stepper motor rotate to specific angles (e.g., 90°, 180°) using calculated steps.
 
-# Lesson 34: Stepper Motors (Part 2) – Using a Driver
+## Lesson 35: Stepper Motors (Part 2) – Using a Driver
 
 Key Concepts:
 
@@ -1346,7 +903,7 @@ Delay between pulses controls speed (shorter = faster).
 ### Homework
 Add a potentiometer to control speed and a button to change direction.
 
-# Lesson 35: Using the AccelStepper Library
+## Lesson 36: Using the AccelStepper Library
 
 Key Concepts:
 
@@ -1383,7 +940,7 @@ AccelStepper::DRIVER mode uses STEP/DIR pins (common with driver boards).
 ### Homework
 Control two stepper motors at once with different speeds and acceleration profiles.
 
-## Lesson 36: Using the EEPROM Library
+## Lesson 37: Using the EEPROM Library
 
 Key Concepts:
 
@@ -1419,7 +976,7 @@ Data survives resets and power cycles. For larger values use EEPROM.put() and EE
 ### Homework
 Save a sensor calibration value to EEPROM and load it automatically on startup.
 
-## Lesson 37: Reading and Writing Larger Data with EEPROM.put() and .get()
+## Lesson 38: Reading and Writing Larger Data with EEPROM.put() and .get()
 
 Key Concepts:
 
@@ -1458,7 +1015,7 @@ A struct groups related variables.
 ### Homework
 Create a settings menu that saves user preferences (brightness, sensitivity) to EEPROM.
 
-## Lesson 38: Using the Arduino as a Web Server
+## Lesson 39: Using the Arduino as a Web Server
 
 Key Concepts:
 
@@ -1502,7 +1059,7 @@ The code sends a minimal HTML response with live sensor data.
 ### Homework
 Add multiple sensor readings and refresh the page automatically with meta tags.
 
-## Lesson 39: Controlling Arduino from a Web Browser (Web Client)
+## Lesson 40: Controlling Arduino from a Web Browser (Web Client)
 
 Key Concepts:
 
@@ -1551,7 +1108,7 @@ Simple links act as buttons to control the hardware.
 ### Homework
 Add more controls (brightness via PWM, servo position) through additional links.
 
-## Lesson 40: Introduction to WiFi with ESP8266
+## Lesson 41: Introduction to WiFi with ESP8266
 
 Key Concepts:
 
@@ -1589,7 +1146,7 @@ Once connected, you can use the module as a web client or server.
 ### Homework
 Send temperature or sensor data from the Arduino to a free online IoT service like ThingSpeak.
 
-## Lesson 41: Connecting Arduino to the Internet with ESP8266
+## Lesson 42: Connecting Arduino to the Internet with ESP8266
 
 Key Concepts:
 
@@ -1640,7 +1197,9 @@ The custom sendCommand function waits for responses.
 ### Homework
 Modify the code to send live DHT11 temperature and humidity data to ThingSpeak every 15 seconds.
 
-## Lesson 42: Creating a Simple Web Server with ESP8266
+# Extra
+
+## Lesson 43: Creating a Simple Web Server with ESP8266
 
 Key Concepts:
 
@@ -1687,7 +1246,7 @@ server.on(path, function) registers handlers for different URLs.
 ### Homework
 Add buttons to turn the LED off and display live sensor readings on the web page.
 
-## Lesson 43: Using MQTT with ESP8266 for IoT
+## Lesson 44: Using MQTT with ESP8266 for IoT
 
 Key Concepts:
 
@@ -1736,7 +1295,7 @@ PubSubClient library handles MQTT connections.
 ### Homework
 Control an LED remotely by publishing "ON" or "OFF" to the subscribed topic from another device.
 
-## Lesson 44: Introduction to Node-RED for IoT Dashboards
+## Lesson 45: Introduction to Node-RED for IoT Dashboards
 
 Key Concepts:
 
@@ -1752,7 +1311,7 @@ This lesson shifts to the Node-RED visual programming tool. You drag nodes (MQTT
 ### Homework
 Create a Node-RED dashboard showing temperature, humidity, and a control button that sends MQTT commands back to your Arduino.
 
-## Lesson 45: Final Project – Smart Home IoT System
+## Lesson 46: Final Project – Smart Home IoT System
 
 Key Concepts:
 
@@ -1790,7 +1349,7 @@ This lesson integrates DHT reading, WiFi connection, and MQTT publishing into on
 ### Homework
 Build and document your own final project (e.g., a weather station that logs to SD, displays on LCD, and sends alerts via MQTT).
 
-## Lesson 46: Using Interrupts for Responsive Projects
+## Lesson 47: Using Interrupts for Responsive Projects
 
 Key Concepts:
 
@@ -1830,7 +1389,7 @@ The ISR runs immediately on trigger; keep it short to avoid blocking.
 ### Homework
 Use an interrupt to count button presses accurately while blinking an LED in the main loop.
 
-## Lesson 47: Advanced Temperature and Humidity with DHT22
+## Lesson 48: Advanced Temperature and Humidity with DHT22
 
 Key Concepts:
 
@@ -1872,7 +1431,7 @@ Delay prevents too-frequent reads (DHT22 needs ~2 seconds between samples).
 ### Homework
 Log DHT22 readings to an SD card (from Lesson 31) with timestamps.
 
-## Lesson 48: Ultrasonic Distance Sensor Enhancements (HC-SR04)
+## Lesson 49: Ultrasonic Distance Sensor Enhancements (HC-SR04)
 
 Key Concepts:
 
@@ -1913,7 +1472,7 @@ Short delay avoids overlapping pulses.
 
 ### Homework: Add an LED bar or buzzer that changes based on distance thresholds (e.g., proximity alarm).
 
-## Lesson 49: Wireless Communication with NRF24L01 Modules
+## Lesson 50: Wireless Communication with NRF24L01 Modules
 
 Key Concepts:
 
@@ -1953,7 +1512,7 @@ Lower PA level for short-range testing.
 ### Homework
 Send temperature data wirelessly from one Arduino to another that displays it on an LCD.
 
-## Lesson 50: Final Capstone Project – Wireless Weather Station
+## Lesson 51: Final Capstone Project – Wireless Weather Station
 
 Key Concepts:
 
@@ -1985,7 +1544,7 @@ This lesson ties everything together. Start with separate modules (sensor readin
 ### Homework
 Build, test, and document your own wireless weather station. Share photos or results in the comments!
 
-## Lesson 51: Using the HC-SR04 Ultrasonic Sensor for Echolocation
+## Lesson 52: Using the HC-SR04 Ultrasonic Sensor for Echolocation
 
 Key Concepts:
 
@@ -2023,7 +1582,7 @@ The trigger sends a 10μs pulse; pulseIn() measures the echo time. The formula u
 ### Homework
 Add an LED that blinks faster as distance decreases (proximity alert).
 
-## Lesson 52: Integrating PIR Motion Sensors with the Arduino Uno R4
+## Lesson 53: Integrating PIR Motion Sensors with the Arduino Uno R4
 
 Key Concepts:
 
@@ -2068,7 +1627,7 @@ Line-by-Line Explanation:
 
 ### Homework: Log motion events with timestamps to an SD card or cloud via WiFi.
 
-## Lesson 53: Advanced Arrays and Data Handling on the R4
+## Lesson 54: Advanced Arrays and Data Handling on the R4
 Key Concepts:
 
 Using arrays for storing multiple sensor readings.
@@ -2105,7 +1664,7 @@ A circular buffer stores the last 10 readings. Subtract old value, add new, then
 ### Homework
 Use an array to store and display multiple ultrasonic distances on the R4's built-in LED matrix.
 
-## Lesson 54: Basic WiFi Setup and Client Connections on Uno R4
+## Lesson 55: Basic WiFi Setup and Client Connections on Uno R4
 
 Key Concepts:
 
@@ -2142,7 +1701,7 @@ WiFiS3 library (specific to R4) handles connection. Loop checks status; once con
 ### Homework
 Send temperature data from a DHT sensor to a web server.
 
-## Lesson 55: Controlling Arduino Projects with a Graphical User Interface over WiFi
+## Lesson 56: Controlling Arduino Projects with a Graphical User Interface over WiFi
 
 Key Concepts:
 
@@ -2310,7 +1869,7 @@ Focuses on robustness. Watchdog timers reset the Arduino if the code hangs. Modu
 ### Homework
 Combine lessons 56–59 into a single, modular "Smart Hub" project that survives WiFi reboots and logs all events with accurate timestamps.
 
-## Lesson 60: System Integration & Reliable IoT Architecture (Continued)
+## Lesson 61: System Integration & Reliable IoT Architecture (Continued)
 
 Key Concepts:
 
@@ -2341,7 +1900,7 @@ The reconnect() function ensures the device recovers from network drops. Watchdo
 ### Homework
 Add watchdog and reconnect to your Smart Hub from Lesson 59; test by unplugging the router.
 
-## Lesson 61: First Steps with WiFi on the Arduino Uno R4
+## Lesson 62: First Steps with WiFi on the Arduino Uno R4
 
 Key Concepts:
 
@@ -2371,7 +1930,7 @@ WiFiS3.h is specific to the R4's Renesas chip. The loop checks WL_CONNECTED stat
 
 Scan and print all available networks with signal strength using WiFi.scanNetworks().
 
-## Lesson 62: First Look at WiFi on the Arduino Uno R4 (Expanded)
+## Lesson 63: First Look at WiFi on the Arduino Uno R4 (Expanded)
 
 Key Concepts:
 
@@ -2398,7 +1957,7 @@ WiFi.RSSI() gives signal quality in dBm. AP mode (WiFi.beginAP()) turns the R4 i
 
 Create a sketch that reports temperature/humidity over Serial only when WiFi is connected and signal > -70 dBm.
 
-## Lesson 63: Installing and Using Thonny for Python Development
+## Lesson 64: Installing and Using Thonny for Python Development
 
 Key Concepts:
 
@@ -2423,7 +1982,7 @@ Thonny provides a clean interface with built-in debugger. Python is interpreted 
 
 Write a Python script in Thonny that asks for two numbers, adds them, and prints the result with formatting.
 
-## Lesson 64: Learn Python Essentials in One Session
+## Lesson 65: Learn Python Essentials in One Session
 
 Key Concepts:
 
@@ -2449,7 +2008,7 @@ Python uses colons (:) and indentation for blocks. Lists replace arrays and supp
 ### Homework
 Modify the grades script to also print the highest and lowest grade using `max()` and `min()`.
 
-## Lesson 65: Passing Data Between Arduino and Desktop Over WiFi
+## Lesson 66: Passing Data Between Arduino and Desktop Over WiFi
 
 Key Concepts:
 
@@ -2490,7 +2049,7 @@ Arduino runs a simple server on port 80. Python uses socket to connect and recei
 Send DHT22 temperature every 10 seconds from Arduino; display it live in a Python loop.
 
 
-## Lesson 66: Passing Data Between Arduino and Desktop Over WiFi
+## Lesson 67: Passing Data Between Arduino and Desktop Over WiFi
 
 Key Concepts:
 
@@ -2535,7 +2094,7 @@ The Arduino listens on port 80 and sends an analog sensor value on connection. P
 ### Homework
 Modify to send temperature from a DHT sensor and display it in Python every 5 seconds.
 
-## Lesson 67: Control LED on Arduino Using Client Server Connection
+## Lesson 68: Control LED on Arduino Using Client Server Connection
 
 Key Concepts:
 
@@ -2562,7 +2121,7 @@ void loop() {
 }
 ```
 
-``python
+```python
 # Python side
 import socket
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -2579,7 +2138,7 @@ Arduino reads incoming commands as strings and controls the LED accordingly. Pyt
 
 ### Homework: Add support for brightness control (using PWM on pin 9) with values like "BRIGHT:128".
 
-## Lesson 68: Introduction to PyQt5 for Graphical Interfaces
+## Lesson 69: Introduction to PyQt5 for Graphical Interfaces
 
 Key Concepts:
 

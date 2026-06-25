@@ -8,4 +8,5 @@ enum LessonContentType: string
     case Markdown = 'markdown';
     case Video = 'video';
     case Code = 'code';
+    case Image = 'image';
 }
