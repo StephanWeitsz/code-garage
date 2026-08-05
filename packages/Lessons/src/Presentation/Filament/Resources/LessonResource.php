@@ -292,7 +292,7 @@ class LessonResource extends Resource
             $markdown = sprintf('![%s](%s)', $alt, $url);
 
             return sprintf(
-                '<li class="space-y-1"><img src="%s" alt="%s" class="h-20 w-auto rounded border border-gray-200 object-contain"><code class="block whitespace-pre-wrap rounded bg-gray-100 px-2 py-1 text-xs text-gray-800">%s</code></li>',
+                '<li class="space-y-1"><img src="%s" alt="%s" class="h-20 w-auto rounded border border-gray-200 object-contain"><code class="block whitespace-pre-wrap rounded bg-gray-400 px-2 py-1 text-xs text-gray-800">%s</code></li>',
                 e($url),
                 e($alt),
                 e($markdown),
